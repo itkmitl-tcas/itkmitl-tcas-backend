@@ -1,0 +1,68 @@
+{
+  "name": "itkmitl-tcas-backend",
+  "version": "1.0.0",
+  "description": "rest api itkmitl tcas",
+  "main": "./dist/server.js",
+  "scripts": {
+    "test": "ts-node ./src/server.ts",
+    "dev": "tsc && nodemon ./dist/server.js",
+    "prod": "tsc && nodemon ./dist/server.js"
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": ["src"],
+    "ext": "ts",
+    "exec": "ts-node ./src/server.ts"
+
+
+  },
+  "author": "vasin sermsampan",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/body-parser": "^1.19.0",
+    "@types/chai": "^4.2.14",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.8",
+    "@types/fs-extra": "^9.0.2",
+    "@types/mocha": "^8.0.3",
+    "@types/node": "^14.11.10",
+    "@types/sequelize": "^4.28.9",
+    "@types/shelljs": "^0.8.8",
+    "@types/supertest": "^2.0.10",
+    "@types/validator": "^13.1.0",
+    "@typescript-eslint/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/parser": "^4.4.1",
+    "chai": "^4.2.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.11.0",
+    "eslint-config-prettier": "^6.13.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "fs-extra": "^9.0.1",
+    "mocha": "^8.2.0",
+    "nodemon": "^2.0.5",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.1.2",
+    "rimraf": "^3.0.2",
+    "shelljs": "^0.8.4",
+    "supertest": "^5.0.0",
+    "ts-node": "^9.0.0",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "@types/bluebird": "^3.5.32",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "pg": "^8.4.1",
+    "pg-hstore": "^2.3.3",
+    "pg-promise": "^10.7.0",
+    "sequelize": "^6.3.5"
+  }
+}
