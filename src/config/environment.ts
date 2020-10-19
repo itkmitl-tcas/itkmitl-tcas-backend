@@ -16,23 +16,23 @@ class Environment {
   }
 
   getHost(): string {
-    return this.environment === Environments.prod_environment ? process.env.DB_HOST : '127.0.0.1';
+    return this.environment === Environments.prod_environment ? process.env.POSTGRES_HOST : 'localhost';
   }
 
   getDBName(): string {
-    return this.environment === Environments.prod_environment ? process.env.DB_NAME : '';
+    return this.environment === Environments.prod_environment ? process.env.POSTGRES_NAME : '';
   }
 
   getDBPort(): number {
-    return this.environment === Environments.prod_environment ? +process.env.DB_PORT : 5432;
+    return this.environment === Environments.prod_environment ? +process.env.POSTGRES_PORT : 5432;
   }
 
   getDBUsername(): string {
-    return this.environment === Environments.prod_environment ? process.env.DB_USERNAME : 'postgres';
+    return this.environment === Environments.prod_environment ? process.env.POSTGRES_USER : 'postgres';
   }
 
   getDBPassword(): string {
-    return this.environment === Environments.prod_environment ? process.env.DB_PASSWORD : '14577';
+    return this.environment === Environments.prod_environment ? process.env.POSTGRES_PASSWORD : 'password';
   }
 }
 

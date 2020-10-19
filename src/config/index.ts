@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import * as dotenv from 'dotenv';
 import { UserRoutes } from '../routes/user_routes';
 
 class App {
