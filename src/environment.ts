@@ -12,27 +12,27 @@ class Environment {
   }
 
   getPort(): number {
-    return this.environment === Environments.prod_environment ? 3000 : 3000;
+    return this.environment === Environments.prod_environment ? +process.env.APP_PORT : 3000;
   }
 
   getHost(): string {
-    return this.environment === Environments.prod_environment ? '' : '127.0.0.1';
+    return this.environment === Environments.prod_environment ? process.env.DB_HOST : '127.0.0.1';
   }
 
   getDBName(): string {
-    return this.environment === Environments.prod_environment ? '' : '';
+    return this.environment === Environments.prod_environment ? process.env.DB_NAME : '';
   }
 
   getDBPort(): number {
-    return this.environment === Environments.prod_environment ? 5432 : 5432;
+    return this.environment === Environments.prod_environment ? +process.env.DB_PORT : 5432;
   }
 
   getDBUsername(): string {
-    return this.environment === Environments.prod_environment ? '' : 'postgres';
+    return this.environment === Environments.prod_environment ? process.env.DB_USERNAME : 'postgres';
   }
 
   getDBPassword(): string {
-    return this.environment === Environments.prod_environment ? '' : '14577';
+    return this.environment === Environments.prod_environment ? process.env.DB_PASSWORD : '14577';
   }
 }
 

@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 // import connectionStr from '../../config/connection';
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.dropMessagesTable = exports.insertMessages = exports.createMessageTable = void 0;
 exports.createMessageTable = `
 DROP TABLE IF EXISTS messages;
