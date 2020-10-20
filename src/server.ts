@@ -4,7 +4,6 @@ import env from './config/environment';
 const PORT = env.getPort();
 
 app.listen(PORT, () => {
-  console.log(process.env);
   console.log(process.env.NODE_ENV);
   console.log(
     `postgres://${env.getDBUsername()}:${env.getDBPassword()}@${env.getHost()}:${env.getDBPort()}/${

@@ -12,27 +12,37 @@ class Environment {
   }
 
   getPort(): number {
-    return this.environment === Environments.prod_environment ? +process.env.APP_PORT : 3000;
+    return this.environment === Environments.prod_environment ? +process.env.APP_PORT : +process.env.APP_PORT || 3000;
   }
 
   getHost(): string {
-    return this.environment === Environments.prod_environment ? process.env.POSTGRES_HOST : 'localhost';
+    return this.environment === Environments.prod_environment
+      ? process.env.POSTGRES_HOST
+      : process.env.POSTGRES_HOST || 'localhost';
   }
 
   getDBName(): string {
-    return this.environment === Environments.prod_environment ? process.env.POSTGRES_NAME : '';
+    return this.environment === Environments.prod_environment
+      ? process.env.POSTGRES_NAME
+      : process.env.POSTGRES_NAME || '';
   }
 
   getDBPort(): number {
-    return this.environment === Environments.prod_environment ? +process.env.POSTGRES_PORT : 5432;
+    return this.environment === Environments.prod_environment
+      ? +process.env.POSTGRES_PORT
+      : +process.env.POSTGRES_PORT || 0;
   }
 
   getDBUsername(): string {
-    return this.environment === Environments.prod_environment ? process.env.POSTGRES_USER : 'postgres';
+    return this.environment === Environments.prod_environment
+      ? process.env.POSTGRES_USER
+      : process.env.POSTGRES_USER || 'postgres';
   }
 
   getDBPassword(): string {
-    return this.environment === Environments.prod_environment ? process.env.POSTGRES_PASSWORD : 'password';
+    return this.environment === Environments.prod_environment
+      ? process.env.POSTGRES_PASSWORD
+      : process.env.POSTGRES_PASSWORD || '14577';
   }
 }
 
