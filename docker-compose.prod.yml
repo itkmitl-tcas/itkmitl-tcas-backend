@@ -40,5 +40,4 @@ volumes:
         driver: local
 networks:
   application-prod-network:
-    name: application-prod-network
     driver: bridge  
