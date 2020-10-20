@@ -1,0 +1,6 @@
+PROD BACKEND: 4000
+DEV BACKEND: 4001
+
+PROD POSTGRES reg@vijvp,kdq 4432
+DEV POSTGRES postgres@vijvpl6fq 4433
+vijvp,kdq
