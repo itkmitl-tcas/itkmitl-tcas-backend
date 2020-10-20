@@ -1,6 +1,6 @@
 import { Application } from 'express';
 import { UserController } from '../controllers/userController';
-import ValidationMiddleware from '../middleware/ValidateMiddleware';
+import ValidationMiddleware from '../middleware//ValidateMiddleware';
 import CreateUserDto from '../modules/users/createUser.dto';
 
 export class UserRoutes {

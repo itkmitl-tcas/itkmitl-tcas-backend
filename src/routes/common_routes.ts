@@ -1,10 +1,10 @@
-import { Application } from 'express';
-import { CommonController } from '../controllers/CommonController';
+// import { Application } from 'express';
+// import { CommonController } from '../controllers/commonController';
 
-export class CommonRoutes {
-  private common_controller: CommonController = new CommonController();
+// export class CommonRoutes {
+//   private common_controller: CommonController = new CommonController();
 
-  public route(app: Application) {
-    app.route('/').get(this.common_controller.healthy);
-  }
-}
+//   public route(app: Application) {
+//     app.route('/').get(this.common_controller.healthy);
+//   }
+// }
