@@ -29,8 +29,8 @@ jobs:
             export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             export POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
             export APP_PORT=${{ secrets.APP_PORT }}
-            docker-compose up -d --no-deps --build
-            
+            docker-compose -f docker-compose.prod.yml up -d --no-deps --build
+
 # mkdir -p $HOME/dags_data/linkedin-scapper/screenshort
 # mkdir -p $HOME/dags_data/linkedin-scapper/url
 # mkdir -p $HOME/dags_data/linkedin-scapper/data
