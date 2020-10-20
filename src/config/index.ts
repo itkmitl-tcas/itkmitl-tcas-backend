@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { UserRoutes } from '../routes/user_routes';
 import { CommonRoutes } from '../routes/common_routes';
+import ErrorMiddleware from '../middleware/ErrorMiddleware';
 
 class App {
   public app: express.Application;
@@ -21,6 +22,8 @@ class App {
     this.app.use(bodyParser.json());
     //support application/x-www-form-urlencoded post data
     this.app.use(bodyParser.urlencoded({ extended: false }));
+    // init error middlewares
+    this.app.use(ErrorMiddleware);
   }
 }
 export default new App().app;

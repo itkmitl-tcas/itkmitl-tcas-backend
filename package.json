@@ -18,11 +18,11 @@
       ".git",
       "node_modules"
     ],
-    "watch": ["src"],
+    "watch": [
+      "src"
+    ],
     "ext": "ts",
     "exec": "ts-node ./src/server.ts"
-
-
   },
   "author": "vasin sermsampan",
   "license": "ISC",
@@ -30,7 +30,6 @@
     "@typescript-eslint/eslint-plugin": "^4.4.1",
     "@typescript-eslint/parser": "^4.4.1",
     "chai": "^4.2.0",
-    
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.13.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -45,26 +44,28 @@
     "tsconfig-paths": "^3.9.0"
   },
   "dependencies": {
-    "typescript": "^4.0.3",
     "@types/bluebird": "^3.5.32",
-    "@types/node": "^14.11.10",
     "@types/body-parser": "^1.19.0",
     "@types/chai": "^4.2.14",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.8",
     "@types/fs-extra": "^9.0.2",
     "@types/mocha": "^8.0.3",
+    "@types/node": "^14.11.10",
     "@types/sequelize": "^4.28.9",
     "@types/shelljs": "^0.8.8",
     "@types/supertest": "^2.0.10",
     "@types/validator": "^13.1.0",
     "body-parser": "^1.19.0",
+    "class-transformer": "^0.3.1",
+    "class-validator": "^0.12.2",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "fs-extra": "^9.0.1",
     "pg": "^8.4.1",
     "pg-hstore": "^2.3.3",
     "pg-promise": "^10.7.0",
     "sequelize": "^6.3.5",
-    "dotenv": "^8.2.0",
-    "fs-extra": "^9.0.1"
+    "typescript": "^4.0.3"
   }
 }

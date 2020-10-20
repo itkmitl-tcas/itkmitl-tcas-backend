@@ -5,6 +5,6 @@ import { Sequelize } from 'sequelize';
 const connectString = `postgres://${env.getDBUsername()}:${env.getDBPassword()}@${env.getHost()}:${env.getDBPort()}/${
   env.getDBName() || ''
 }`;
-const sequelize = new Sequelize(connectString);
+const sequelize = new Sequelize(connectString, { logging: false });
 
 export const database = sequelize;
