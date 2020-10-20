@@ -22,9 +22,7 @@ class Environment {
   }
 
   getDBName(): string {
-    return this.environment === Environments.prod_environment
-      ? process.env.POSTGRES_NAME
-      : process.env.POSTGRES_NAME || '';
+    return this.environment === Environments.prod_environment ? process.env.POSTGRES_DB : process.env.POSTGRES_DB || '';
   }
 
   getDBPort(): number {
