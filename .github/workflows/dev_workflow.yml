@@ -21,7 +21,7 @@ jobs:
           key : ${{ secrets.SERVER_KEY }}
           script: |
             git checkout dev
-            [ ! -d ${{ github.event.repository.name }} ] && git clone --branch devhttps://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PASSWORD }}@github.com/vasin-peach/itkmitl-tcas-backend
+            [ ! -d ${{ github.event.repository.name }} ] && git clone --branch dev https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PASSWORD }}@github.com/vasin-peach/itkmitl-tcas-backend
             cd ${{ github.event.repository.name }}
             git pull --force
             export APP_PORT=${{ secrets.DEV_APP_PORT }}
