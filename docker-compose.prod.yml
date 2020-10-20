@@ -8,8 +8,11 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - database-prod-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+    expose:
+      - ${POSTGRES_PORT}
     ports:
-      - 5432:5432
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    command: -p ${POSTGRES_PORT}
     networks: 
       - application-prod-network
       
@@ -17,7 +20,7 @@ services:
     container_name: backend-prod
     environment:
       NODE_ENV: production
-      APP_PORT: 3000
+      APP_PORT: 3000 # container port
       POSTGRES_HOST: database-prod
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -28,7 +31,7 @@ services:
     depends_on:
       - database-prod
     ports: 
-      - ${APP_PORT}:3000
+      - ${APP_PORT}:3000 # expose port with prod port
     networks: 
       - application-prod-network
 volumes:

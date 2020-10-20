@@ -1,8 +1,12 @@
-name: Production Workflow
+name: Deploy Production Workflow
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   deploy:
@@ -19,9 +23,9 @@ jobs:
             cd ${{ github.event.repository.name }}
             git pull --force
             export APP_PORT=${{ secrets.PROD_APP_PORT }}
-            export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            export POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
+            export POSTGRES_USER=${{ secrets.PROD_POSTGRES_USER }}
+            export POSTGRES_PASSWORD=${{ secrets.PROD_POSTGRES_PASSWORD }}
+            export POSTGRES_PORT=${{ secrets.PROD_POSTGRES_PORT }}
             docker-compose -f docker-compose.prod.yml down
             docker-compose -f docker-compose.prod.yml up -d --no-deps --build
 

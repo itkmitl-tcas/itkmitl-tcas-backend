@@ -8,8 +8,11 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - database-dev-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+    expose:
+      - ${POSTGRES_PORT}
     ports:
-      - "5442:5432"
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    command: -p ${POSTGRES_PORT}
     networks: 
       - application-dev-network
       
@@ -32,11 +35,6 @@ services:
       - ${APP_PORT}:3000 # expose port with prod port
     networks: 
       - application-dev-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/users || exit 1"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 2
 volumes:
   database-dev-data: # named volumes can be managed easier using docker-compose
       driver: local
