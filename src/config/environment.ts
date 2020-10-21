@@ -28,7 +28,7 @@ class Environment {
   getDBPort(): number {
     return this.environment === Environments.prod_environment
       ? +process.env.POSTGRES_PORT
-      : +process.env.POSTGRES_PORT || 0;
+      : +process.env.POSTGRES_PORT || 5432;
   }
 
   getDBUsername(): string {
@@ -41,6 +41,12 @@ class Environment {
     return this.environment === Environments.prod_environment
       ? process.env.POSTGRES_PASSWORD
       : process.env.POSTGRES_PASSWORD || '14577';
+  }
+
+  getJWTSecret(): string {
+    return this.environment === Environments.prod_environment
+      ? process.env.JWT_SECRET
+      : process.env.JWT_SECRET || 'secret';
   }
 }
 

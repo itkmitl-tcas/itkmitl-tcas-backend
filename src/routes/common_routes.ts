@@ -1,10 +1,10 @@
-import { Application, Request, Response } from 'express';
+// import { Application } from 'express';
+// import { CommonController } from '../controllers/commonController';
 
-export class CommonRoutes {
-  public route(app: Application) {
-    // Mismatch URL
-    app.all('*', function (req: Request, res: Response) {
-      res.status(404).send({ error: true, message: 'Check your URL please' });
-    });
-  }
-}
+// export class CommonRoutes {
+//   private common_controller: CommonController = new CommonController();
+
+//   public route(app: Application) {
+//     app.route('/').get(this.common_controller.healthy);
+//   }
+// }

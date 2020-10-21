@@ -1,7 +1,24 @@
 import { Model, DataTypes } from 'sequelize';
 import { database } from '../../config/database';
 
-export class User extends Model {}
+export class User extends Model {
+  apply_id: string;
+  prename?: string;
+  name?: string;
+  surname?: string;
+  email?: string;
+  mobile?: string;
+  school_name?: string;
+  pay?: boolean;
+  gpax?: number;
+  gpax_match?: number;
+  gpax_eng?: number;
+  gpax_com?: number;
+  credit_total?: number;
+  study_field?: string;
+  apply_type?: string;
+  permission?: number;
+}
 
 User.init(
   {
@@ -16,61 +33,66 @@ User.init(
       unique: true,
     },
     apply_type: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: true,
     },
     /* --------------------------------- Default Info -------------------------------- */
-    prefix: {
-      type: new DataTypes.STRING(128),
+    prename: {
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     name: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     surname: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     email: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
       validate: {
         isEmail: true,
       },
     },
     mobile: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     /* ------------------------------- School Info ------------------------------ */
-    school: {
-      type: new DataTypes.STRING(128),
+    school_name: {
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     gpax: {
-      type: new DataTypes.FLOAT(1, 1),
+      type: DataTypes.DECIMAL(3, 2),
       allowNull: false,
     },
     gpax_match: {
-      type: new DataTypes.FLOAT(1, 1),
+      type: DataTypes.DECIMAL(3, 2),
       allowNull: true,
     },
     gpax_eng: {
-      type: new DataTypes.FLOAT(1, 1),
+      type: DataTypes.DECIMAL(3, 2),
       allowNull: true,
     },
     gpax_com: {
-      type: new DataTypes.FLOAT(1, 1),
+      type: DataTypes.DECIMAL(3, 2),
       allowNull: true,
     },
     credit_total: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(5, 2),
       allowNull: true,
     },
     study_field: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
+      allowNull: true,
+    },
+    pay: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
     },
     /* --------------------------------- System --------------------------------- */
     step: {
@@ -78,10 +100,15 @@ User.init(
       allowNull: false,
       defaultValue: 1,
     },
-    pay: {
-      type: DataTypes.BOOLEAN,
+    password: {
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: false,
+      defaultValue: '<3',
+    },
+    permission: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
     },
   },
   {
@@ -91,4 +118,4 @@ User.init(
   },
 );
 
-User.sync({ alter: true }).then(() => console.log('User table created'));
+User.sync({ alter: true });
