@@ -21,6 +21,7 @@ jobs:
           script: |
             [ ! -d ${{ github.event.repository.name }} ] && git clone https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PASSWORD }}@github.com/vasin-peach/itkmitl-tcas-backend
             cd ${{ github.event.repository.name }}
+            git checkout master
             git pull --force
             export APP_PORT=${{ secrets.PROD_APP_PORT }}
             export POSTGRES_USER=${{ secrets.PROD_POSTGRES_USER }}
