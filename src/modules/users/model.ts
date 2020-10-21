@@ -49,23 +49,23 @@ User.init(
       allowNull: false,
     },
     gpax: {
-      type: new DataTypes.FLOAT(1, 1),
+      type: new DataTypes.DECIMAL(3, 2),
       allowNull: false,
     },
     gpax_match: {
-      type: new DataTypes.FLOAT(1, 1),
+      type: new DataTypes.DECIMAL(3, 2),
       allowNull: true,
     },
     gpax_eng: {
-      type: new DataTypes.FLOAT(1, 1),
+      type: new DataTypes.DECIMAL(3, 2),
       allowNull: true,
     },
     gpax_com: {
-      type: new DataTypes.FLOAT(1, 1),
+      type: new DataTypes.DECIMAL(3, 2),
       allowNull: true,
     },
     credit_total: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(5, 2),
       allowNull: true,
     },
     study_field: {
