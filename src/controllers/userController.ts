@@ -1,9 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { User } from '../modules/users/model';
 import { IUser } from '../modules/users/interface';
-import { successResponse, failureResponse, insufficientParameters } from '../modules/common/service';
-import HttpException from '../exceptions/HttpException';
-import UserNotFoundExpcetion from '../exceptions/UserNotFoundException';
+import {
+  successResponse,
+  failureResponse,
+  notFoundResponse,
+  createdResponse,
+  insufficientParameters,
+  updatedResponse,
+  deletedResponse,
+} from '../exceptions/HttpExceptions';
 
 export class UserController {
   // index to show list of nodes
@@ -13,40 +19,49 @@ export class UserController {
       .catch((err: Error) => failureResponse('Failed to get user index.', err, res));
   }
 
-  public create(req: Request, res: Response) {
+  public async create(req: Request, res: Response) {
     const params: IUser = req.body;
 
-    User.create<User>(params)
-      .then((node: User) => successResponse('Created user.', node, res))
-      .catch((err: Error) => failureResponse('Failed to create user.', err, res));
+    await User.create<User>(params)
+      .then((node: User) => createdResponse(params.apply_id, node, res))
+      .catch((err) => {
+        const errors = err.errors.map((item: any) => item.message);
+        insufficientParameters(errors, res);
+      });
   }
 
   public get(req: Request, res: Response, next: NextFunction) {
-    const apply_id = req.params.id;
-
+    const apply_id = req.params.apply_id;
     User.findAll({
       where: {
         apply_id: apply_id,
       },
     })
       .then((nodes: Array<User>) => {
-        if (nodes.length) res.send(nodes);
-        else next(new UserNotFoundExpcetion(apply_id));
+        if (nodes.length) successResponse(apply_id, nodes, res);
+        else next(notFoundResponse(apply_id, res));
       })
-      .catch((err: Error) => failureResponse('Failed to get user index.', err, res));
+      .catch((err) => {
+        const errors = err.errors.map((item: any) => item.message);
+        failureResponse('get user', errors, res);
+      });
   }
 
   public async update(req: Request, res: Response, next: NextFunction) {
     const params: IUser = req.body;
+    const apply_id = params.apply_id;
 
     User.update(params, {
-      where: { apply_id: params.apply_id },
+      where: { apply_id: apply_id },
     })
       .then((node) => {
-        if (node[0]) successResponse('Updated', node, res);
-        else next(new UserNotFoundExpcetion(params.apply_id));
+        if (node[0]) updatedResponse(apply_id, node, res);
+        else return next(notFoundResponse(apply_id, res));
       })
-      .catch((err: Error) => failureResponse('Update failed', err, res));
+      .catch((err) => {
+        const errors = err.errors.map((item: any) => item.message);
+        failureResponse('update user', errors, res);
+      });
   }
 
   public async delete(req: Request, res: Response, next: NextFunction) {
@@ -54,15 +69,18 @@ export class UserController {
       apply_id: string;
     }
     const params: IDelete = req.body;
+    const apply_id = params.apply_id;
 
     User.destroy({
-      where: { apply_id: params.apply_id },
+      where: { apply_id: apply_id },
     })
       .then((node) => {
-        console.log(node);
-        if (node) successResponse('Delete', node, res);
-        else next(new UserNotFoundExpcetion(params.apply_id));
+        if (node) deletedResponse(apply_id, node, res);
+        else return next(notFoundResponse(apply_id, res));
       })
-      .catch((err: Error) => next(new HttpException(500, 'Something went wrong', err)));
+      .catch((err) => {
+        const errors = err.errors.map((item: any) => item.message);
+        failureResponse('delete user', errors, res);
+      });
   }
 }

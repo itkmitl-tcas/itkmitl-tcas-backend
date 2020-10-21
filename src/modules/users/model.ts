@@ -91,4 +91,4 @@ User.init(
   },
 );
 
-User.sync({ alter: true }).then(() => console.log('User table created'));
+User.sync({ alter: true });

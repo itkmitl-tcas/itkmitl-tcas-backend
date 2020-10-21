@@ -1,20 +1,19 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { UserRoutes } from '../routes/user_routes';
-// import { CommonRoutes } from '../routes/common_routes';
-import ErrorMiddleware from '../middleware/ErrorMiddleware';
+import { UserRoutes, AuthRoutes } from '../routes/user_routes';
 
 class App {
   public app: express.Application;
 
-  // private common_routes: CommonRoutes = new CommonRoutes();
   private user_routes: UserRoutes = new UserRoutes();
+  private auth_routes: AuthRoutes = new AuthRoutes();
 
   constructor() {
     this.app = express();
     this.config();
     // this.common_routes.route(this.app);
     this.user_routes.route(this.app);
+    this.auth_routes.route(this.app);
   }
 
   private config(): void {
@@ -22,8 +21,6 @@ class App {
     this.app.use(bodyParser.json());
     //support application/x-www-form-urlencoded post data
     this.app.use(bodyParser.urlencoded({ extended: false }));
-    // init error middlewares
-    this.app.use(ErrorMiddleware);
   }
 }
 export default new App().app;
