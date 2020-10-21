@@ -26,8 +26,8 @@ export class AuthRoutes {
   public route(app: Application): void {
     app.route('/auth').get(this.auth_controller.healthy);
     app.route('/auth/signin').post(ValidationMiddleware(SignInDto, false), this.auth_controller.signIn);
-    // app.route('/auth/signin/teacher').post(ValidationMiddleware(SignInTDto, false), this.auth_controller.signInTeacher);
-    app.route('/auth/signout').post(AuthMiddelware, this.auth_controller.signOut);
+    app.route('/auth/signout').post(AuthMiddelware(1), this.auth_controller.signOut);
+    app.route('/auth/signin/teacher').post(ValidationMiddleware(SignInTDto, false), this.auth_controller.signInTeacher);
     // maybe change password?
   }
 }
