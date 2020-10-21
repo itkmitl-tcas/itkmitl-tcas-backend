@@ -14,3 +14,9 @@ export interface IUser {
   study_field: string;
   apply_type: string;
 }
+
+export interface IUserSignIn {
+  apply_id: string;
+  name: string;
+  surname: string;
+}
