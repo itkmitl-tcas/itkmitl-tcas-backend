@@ -42,6 +42,12 @@ class Environment {
       ? process.env.POSTGRES_PASSWORD
       : process.env.POSTGRES_PASSWORD || '14577';
   }
+
+  getJWTSecret(): string {
+    return this.environment === Environments.prod_environment
+      ? process.env.JWT_SECRET
+      : process.env.JWT_SECRET || 'secret';
+  }
 }
 
 export default new Environment(process.env.NODE_ENV);

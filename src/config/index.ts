@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import { UserRoutes, AuthRoutes } from '../routes/user_routes';
 
 class App {
@@ -21,6 +22,7 @@ class App {
     this.app.use(bodyParser.json());
     //support application/x-www-form-urlencoded post data
     this.app.use(bodyParser.urlencoded({ extended: false }));
+    this.app.use(cookieParser());
   }
 }
 export default new App().app;

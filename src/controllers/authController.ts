@@ -1,14 +1,20 @@
 import axios from 'axios';
 import { Request, Response, NextFunction } from 'express';
-import { IUserSignIn } from '../modules/users/interface';
+import { IUserSignIn, IToken, ITokenData, IUser } from '../modules/users/interface';
 import { successResponse, failureResponse, notFoundResponse, mismatchResponse } from '../exceptions/HttpExceptions';
 import { User } from '../modules/users/model';
-import { IUser } from '../modules/users/interface';
+import env from '../config/environment';
+import jwt from 'jsonwebtoken';
+import { SignInTDto } from '../modules/users/user.dto';
 
 export class AuthController {
+  /* --------------------------------- Healthy -------------------------------- */
+
   public healthy(req: Request, res: Response) {
     successResponse('Auth api healthy.', null, res);
   }
+
+  /* --------------------------------- Sign In -------------------------------- */
   public async signIn(request: Request, res: Response, next: NextFunction) {
     const signInParams: IUserSignIn = request.body;
 
@@ -31,7 +37,7 @@ export class AuthController {
     // define payload for create
     const payload = {
       apply_id: reg_res.apply_id,
-      name: reg_res.surname,
+      name: reg_res.name,
       surname: reg_res.surname,
       email: reg_res.email,
       mobile: reg_res.mobile,
@@ -48,10 +54,67 @@ export class AuthController {
       },
       defaults: payload,
     })
-      .then(() => successResponse('Sign in', reg_res, res))
+      .then((result) => result)
       .catch((err) => {
-        console.log(err);
-        failureResponse('create user', err, res);
+        return failureResponse('create user', err, res);
       });
+
+    const user: IUser = await User.findOne({
+      where: {
+        apply_id: signInParams.apply_id,
+      },
+    });
+
+    const tokenPayload = { apply_id: user.apply_id, permission: user.permission };
+
+    const tokenData = await AuthController.createToken(tokenPayload);
+    res.setHeader('Set-Cookie', [AuthController.createCookie(tokenData)]);
+    successResponse('Sign in', tokenPayload, res);
+  }
+
+  /* ----------------------------- Sign In Teacher ---------------------------- */
+  public async signInTeacher(request: Request, res: Response, next: NextFunction) {
+    const signInParams: SignInTDto = request.body;
+
+    // save to db
+    const user: IUser = await User.findOne({
+      where: {
+        apply_id: signInParams.apply_id,
+        password: signInParams.password,
+      },
+    });
+
+    if (!user) return next(mismatchResponse(401, `${signInParams.apply_id}`, res));
+    if (user.permission < 2) return next(mismatchResponse(401, `${signInParams.apply_id} permission denind`, res));
+
+    const tokenPayload = { apply_id: user.apply_id, permission: user.permission };
+
+    const tokenData = await AuthController.createToken(tokenPayload);
+    res.setHeader('Set-Cookie', [AuthController.createCookie(tokenData)]);
+    successResponse('Sign in', tokenPayload, res);
+  }
+
+  /* -------------------------------- Sign Out -------------------------------- */
+  public async signOut(request: Request, res: Response) {
+    res.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
+    successResponse('Sign out', null, res);
+  }
+
+  /* ----------------------------------- JWT ---------------------------------- */
+  static createToken(user: ITokenData): any {
+    const expiresIn = 60 * 60; // an hour
+    const secret = env.getJWTSecret();
+    const dataStoredInToken: ITokenData = {
+      apply_id: user.apply_id,
+      permission: user.permission,
+    };
+    return {
+      expiresIn,
+      token: jwt.sign(dataStoredInToken, secret, { expiresIn }),
+    };
+  }
+
+  static createCookie(tokenData: IToken) {
+    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
   }
 }

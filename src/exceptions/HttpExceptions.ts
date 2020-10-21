@@ -58,7 +58,7 @@ export function insufficientParameters(DATA: any, res: Response) {
 export function mismatchResponse(status: number, message: string, res: Response) {
   res.status(status).json({
     STATUS: 'MISMATCH',
-    MESSAGE: `Resource does not match with ${message}`,
+    MESSAGE: `Request does not match with ${message}`,
   });
 }
 

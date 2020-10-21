@@ -1,7 +1,24 @@
 import { Model, DataTypes } from 'sequelize';
 import { database } from '../../config/database';
 
-export class User extends Model {}
+export class User extends Model {
+  apply_id: string;
+  prename?: string;
+  name?: string;
+  surname?: string;
+  email?: string;
+  mobile?: string;
+  school_name?: string;
+  pay?: boolean;
+  gpax?: number;
+  gpax_match?: number;
+  gpax_eng?: number;
+  gpax_com?: number;
+  credit_total?: number;
+  study_field?: string;
+  apply_type?: string;
+  permission?: number;
+}
 
 User.init(
   {
@@ -72,16 +89,26 @@ User.init(
       type: new DataTypes.STRING(128),
       allowNull: true,
     },
+    pay: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     /* --------------------------------- System --------------------------------- */
     step: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 1,
     },
-    pay: {
-      type: DataTypes.BOOLEAN,
+    password: {
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: false,
+      defaultValue: '<3',
+    },
+    permission: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
     },
   },
   {
