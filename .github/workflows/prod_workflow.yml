@@ -27,6 +27,7 @@ jobs:
             export POSTGRES_USER=${{ secrets.PROD_POSTGRES_USER }}
             export POSTGRES_PASSWORD=${{ secrets.PROD_POSTGRES_PASSWORD }}
             export POSTGRES_PORT=${{ secrets.PROD_POSTGRES_PORT }}
+            export JWT_SECRET=${{ secrets.PROD_JWT_SECRET }}
             docker-compose -f docker-compose.prod.yml down
             docker-compose -f docker-compose.prod.yml up -d --no-deps --build
 
