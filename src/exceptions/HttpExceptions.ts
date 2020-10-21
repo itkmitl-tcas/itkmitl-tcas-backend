@@ -55,6 +55,13 @@ export function insufficientParameters(DATA: any, res: Response) {
   });
 }
 
+export function mismatchResponse(status: number, message: string, res: Response) {
+  res.status(status).json({
+    STATUS: 'MISMATCH',
+    MESSAGE: `Resource does not match with ${message}`,
+  });
+}
+
 // export function unavailableResponse(res: Response) {
 //   res.status(response_status_codes.internal_server_error).json({
 //     STATUS: 'FAILURE',

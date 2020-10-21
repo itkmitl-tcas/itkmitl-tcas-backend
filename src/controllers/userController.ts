@@ -12,6 +12,10 @@ import {
 } from '../exceptions/HttpExceptions';
 
 export class UserController {
+  public healthy(req: Request, res: Response) {
+    successResponse('User api healthy.', null, res);
+  }
+
   // index to show list of nodes
   public index(req: Request, res: Response) {
     User.findAll<User>({})

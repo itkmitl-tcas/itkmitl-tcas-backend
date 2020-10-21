@@ -5,7 +5,7 @@ export class CreateUserDto {
   public apply_id: string;
 
   @IsString()
-  public prefix: string;
+  public prename: string;
 
   @IsString()
   public name: string;
@@ -20,7 +20,7 @@ export class CreateUserDto {
   public mobile: string;
 
   @IsString()
-  public school: string;
+  public school_name: string;
 
   // @Allow()
   // @IsInt()

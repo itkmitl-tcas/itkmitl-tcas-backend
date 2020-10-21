@@ -20,7 +20,7 @@ User.init(
       allowNull: true,
     },
     /* --------------------------------- Default Info -------------------------------- */
-    prefix: {
+    prename: {
       type: new DataTypes.STRING(128),
       allowNull: false,
     },
@@ -44,7 +44,7 @@ User.init(
       allowNull: false,
     },
     /* ------------------------------- School Info ------------------------------ */
-    school: {
+    school_name: {
       type: new DataTypes.STRING(128),
       allowNull: false,
     },
@@ -70,7 +70,7 @@ User.init(
     },
     study_field: {
       type: new DataTypes.STRING(128),
-      allowNull: false,
+      allowNull: true,
     },
     /* --------------------------------- System --------------------------------- */
     step: {
