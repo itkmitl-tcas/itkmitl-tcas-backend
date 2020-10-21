@@ -33,52 +33,52 @@ User.init(
       unique: true,
     },
     apply_type: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: true,
     },
     /* --------------------------------- Default Info -------------------------------- */
     prename: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     name: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     surname: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     email: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
       validate: {
         isEmail: true,
       },
     },
     mobile: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     /* ------------------------------- School Info ------------------------------ */
     school_name: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     gpax: {
-      type: new DataTypes.DECIMAL(3, 2),
+      type: DataTypes.DECIMAL(3, 2),
       allowNull: false,
     },
     gpax_match: {
-      type: new DataTypes.DECIMAL(3, 2),
+      type: DataTypes.DECIMAL(3, 2),
       allowNull: true,
     },
     gpax_eng: {
-      type: new DataTypes.DECIMAL(3, 2),
+      type: DataTypes.DECIMAL(3, 2),
       allowNull: true,
     },
     gpax_com: {
-      type: new DataTypes.DECIMAL(3, 2),
+      type: DataTypes.DECIMAL(3, 2),
       allowNull: true,
     },
     credit_total: {
@@ -86,7 +86,7 @@ User.init(
       allowNull: true,
     },
     study_field: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: true,
     },
     pay: {
