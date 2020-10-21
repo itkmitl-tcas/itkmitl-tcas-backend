@@ -48,7 +48,7 @@ export class AuthController {
       school_name: reg_res.school_name,
     };
     // save to db
-    User.findOrCreate<User>({
+    const result: any = await User.findOrCreate<User>({
       where: {
         apply_id: payload.apply_id,
       },
@@ -59,14 +59,8 @@ export class AuthController {
         return failureResponse('create user', err, res);
       });
 
-    const user: IUser = await User.findOne({
-      where: {
-        apply_id: signInParams.apply_id,
-      },
-    });
-
+    const user: IUser = result[0];
     const tokenPayload = { apply_id: user.apply_id, permission: user.permission };
-
     const tokenData = await AuthController.createToken(tokenPayload);
     res.setHeader('Set-Cookie', [AuthController.createCookie(tokenData)]);
     successResponse('Sign in', tokenPayload, res);
