@@ -16,6 +16,10 @@ class App {
     this.config();
     this.user_routes.route(this.app);
     this.auth_routes.route(this.app);
+
+    this.app.get('/debug-sentry', function mainHandler(req, res) {
+      throw new Error('My first Sentry error!');
+    });
   }
 
   private config(): void {
@@ -39,14 +43,9 @@ class App {
       // for finer control
       tracesSampleRate: 1.0,
     });
-
-    // RequestHandler creates a separate execution context using domains, so that every
-    // transaction/span/breadcrumb is attached to its own Hub instance
+    // The request handler must be the first middleware on the app
     app.use(Sentry.Handlers.requestHandler());
-    // TracingHandler creates a trace for every incoming request
-    app.use(Sentry.Handlers.tracingHandler());
-
-    // The error handler must be before any other error middleware and after all controllers
+    // The error handler must be before any other error middleware
     app.use(Sentry.Handlers.errorHandler());
   }
 }
