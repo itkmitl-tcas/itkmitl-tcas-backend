@@ -32,6 +32,7 @@ User.init(
       allowNull: false,
       unique: true,
     },
+
     apply_type: {
       type: DataTypes.STRING(128),
       allowNull: true,
@@ -63,11 +64,11 @@ User.init(
     /* ------------------------------- School Info ------------------------------ */
     school_name: {
       type: DataTypes.STRING(128),
-      allowNull: false,
+      allowNull: true,
     },
     gpax: {
       type: DataTypes.DECIMAL(3, 2),
-      allowNull: false,
+      allowNull: true,
     },
     gpax_match: {
       type: DataTypes.DECIMAL(3, 2),

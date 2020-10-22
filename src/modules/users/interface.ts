@@ -17,6 +17,7 @@ export interface IUser {
   study_field?: string;
   apply_type?: string;
   permission?: number;
+  password?: string;
 }
 
 export interface IUserSignIn {
@@ -35,6 +36,7 @@ export interface IUserSignIn {
   credit_total: string;
   study_field: string;
   apply_type: string;
+  password: string;
 }
 
 export interface IToken {
@@ -48,5 +50,5 @@ export interface ITokenData {
 }
 
 export interface IRequestWithUser extends Request {
-  user: IUser;
+  user: ITokenData;
 }

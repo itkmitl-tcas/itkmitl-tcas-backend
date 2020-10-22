@@ -15,7 +15,7 @@ export class UserRoutes {
     app
       .get('/user/:apply_id', AuthMiddelware(2), this.user_controller.get)
       .post('/user', AuthMiddelware(3), ValidationMiddleware(CreateUserDto, false), this.user_controller.create)
-      .patch('/user', AuthMiddelware(3), ValidationMiddleware(CreateUserDto, true), this.user_controller.update)
+      .patch('/user', AuthMiddelware(1), ValidationMiddleware(CreateUserDto, true), this.user_controller.update)
       .delete('/user', AuthMiddelware(3), this.user_controller.delete);
   }
 }

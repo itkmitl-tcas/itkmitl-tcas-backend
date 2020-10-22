@@ -1,61 +1,79 @@
-import { IsString, IsEmail, IsNotEmpty, Min, Max, IsInt, Allow, isString } from 'class-validator';
+import { IsString, IsEmail, IsDecimal, IsOptional, IsNotEmpty, IsInt, IsNumberString } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
+  @IsNotEmpty()
   public apply_id: string;
 
   @IsString()
+  @IsNotEmpty()
   public prename: string;
 
   @IsString()
+  @IsNotEmpty()
   public name: string;
 
   @IsString()
+  @IsNotEmpty()
   public surname: string;
 
   @IsEmail()
+  @IsNotEmpty()
   public email: string;
 
   @IsString()
+  @IsNotEmpty()
   public mobile: string;
 
+  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   public school_name: string;
 
-  // @Allow()
-  // @IsInt()
-  // @Min(0)
-  // @Max(4)
-  // public gpax: string;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsDecimal()
+  public gpax: string;
 
-  // @Allow()
-  // @IsInt()
-  // @Min(0)
-  // @Max(4)
-  // public gpax_match: string;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsDecimal()
+  public gpax_match: string;
 
-  // @Allow()
-  // @IsInt()
-  // @Min(0)
-  // @Max(4)
-  // public gpax_eng: string;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsDecimal()
+  public gpax_eng: string;
 
-  // @Allow()
-  // @IsInt()
-  // @Min(0)
-  // @Max(4)
-  // public gpax_com: string;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsDecimal()
+  public gpax_com: string;
 
-  // @IsInt()
-  // @Allow()
-  // public credit_total: string;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsDecimal()
+  public credit_total: string;
 
-  // @IsString()
-  // public study_field: string;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  public study_field: string;
 
-  // @Allow()
-  // @IsString()
-  // public apply_type: string;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  public apply_type: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsNumberString()
+  public permission: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsNumberString()
+  public step: string;
 }
 
 export class SignInDto {
