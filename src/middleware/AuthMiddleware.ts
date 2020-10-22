@@ -22,7 +22,7 @@ export default function AuthMiddleware<T>(permission = 1): RequestHandler {
           if (user.permission < permission) {
             mismatchResponse(401, `credentials permission denied (${user.permission}|${permission})`, res);
           } else {
-            request.user = user;
+            request.user = verificationResponse;
             next();
           }
         } else {
