@@ -12,6 +12,7 @@ import {
   deletedResponse,
   mismatchResponse,
 } from '../exceptions/HttpExceptions';
+import { Docs } from '../modules/document/model';
 
 export class UserController {
   /* -------------------------------- Healthly -------------------------------- */
@@ -26,6 +27,7 @@ export class UserController {
       where: {
         apply_id: apply_id,
       },
+      include: { model: Docs },
     })
       .then((nodes: Array<User>) => {
         if (nodes.length) successResponse(apply_id, nodes, res);
@@ -49,7 +51,7 @@ export class UserController {
     const params: IUser = req.body;
 
     await User.create<User>(params)
-      .then((node: User) => createdResponse(params.apply_id, node, res))
+      .then((node: User) => createdResponse(`${params.apply_id}`, node, res))
       .catch((err) => {
         try {
           const errors = err.errors.map((item: any) => item.message);
@@ -65,12 +67,10 @@ export class UserController {
     const params: IUser = req.body;
     const apply_id = params.apply_id;
     let allowUpdate = false;
-    const user = await User.findOne({
-      where: { apply_id: req.user.apply_id },
-    });
+    const user = await User.findByPk(req.user.apply_id);
 
     // 404 if user not found
-    if (!user) return notFoundResponse(apply_id, res);
+    if (!user) return notFoundResponse(`${params.apply_id}`, res);
 
     if (user.permission >= 3) {
       // permission 3 or above can update all data & permission
@@ -100,8 +100,8 @@ export class UserController {
         where: { apply_id: apply_id },
       })
         .then((node) => {
-          if (node[0]) updatedResponse(apply_id, node, res);
-          else return next(notFoundResponse(apply_id, res));
+          if (node[0]) updatedResponse(`${params.apply_id}`, params, res);
+          else return next(notFoundResponse(`${params.apply_id}`, res));
         })
         .catch((err) => {
           const errors = err.errors.map((item: any) => item.message);
@@ -128,8 +128,7 @@ export class UserController {
         else return next(notFoundResponse(apply_id, res));
       })
       .catch((err) => {
-        const errors = err.errors.map((item: any) => item.message);
-        failureResponse('delete user', errors, res);
+        failureResponse('delete user', err.message, res);
       });
   }
 }

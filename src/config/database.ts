@@ -6,5 +6,4 @@ const connectString = `postgres://${env.getDBUsername()}:${env.getDBPassword()}@
   env.getDBName() || ''
 }`;
 const sequelize = new Sequelize(connectString, { logging: process.env.NODE_ENV == 'production' ? true : false });
-
 export const database = sequelize;

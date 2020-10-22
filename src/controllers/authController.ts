@@ -26,13 +26,13 @@ export class AuthController {
 
     // validate reg response
     if (!reg_res) return next(failureResponse('REG', null, res));
-    if (!reg_res.apply_id) return next(notFoundResponse(signInParams.apply_id, res));
+    if (!reg_res.apply_id) return next(notFoundResponse(`${signInParams.apply_id}`, res));
     if (
       reg_res.apply_id !== signInParams.apply_id ||
       reg_res.name !== signInParams.name ||
       reg_res.surname !== signInParams.surname
     )
-      return next(mismatchResponse(401, signInParams.apply_id, res));
+      return next(mismatchResponse(401, `${signInParams.apply_id}`, res));
 
     // define payload for create
     const payload = {
@@ -58,6 +58,8 @@ export class AuthController {
       .catch((err) => {
         return failureResponse('create user', err, res);
       });
+
+    if (!result) return;
 
     const user: IUser = result[0];
     const tokenPayload = { apply_id: user.apply_id, permission: user.permission };

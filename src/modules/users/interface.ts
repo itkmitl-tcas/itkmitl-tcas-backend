@@ -1,7 +1,7 @@
 import { Request } from 'express';
 
 export interface IUser {
-  apply_id: string;
+  apply_id: number;
   prename?: string;
   name?: string;
   surname?: string;
@@ -21,7 +21,7 @@ export interface IUser {
 }
 
 export interface IUserSignIn {
-  apply_id: string;
+  apply_id: number;
   prename: string;
   name: string;
   surname: string;
@@ -45,7 +45,7 @@ export interface IToken {
 }
 
 export interface ITokenData {
-  apply_id: string;
+  apply_id: number;
   permission: number;
 }
 
