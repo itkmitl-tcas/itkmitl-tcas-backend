@@ -12,8 +12,8 @@ class App {
 
   constructor() {
     this.app = express();
-    this.initSentryIO();
     this.config();
+    this.initSentryIO();
     this.user_routes.route(this.app);
     this.auth_routes.route(this.app);
 

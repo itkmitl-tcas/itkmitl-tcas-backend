@@ -22,14 +22,10 @@ export class User extends Model {
 
 User.init(
   {
-    _id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
     apply_id: {
       type: DataTypes.STRING(128),
       allowNull: false,
+      primaryKey: true,
       unique: true,
     },
 
