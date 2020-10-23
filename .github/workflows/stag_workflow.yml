@@ -12,19 +12,31 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           ref: dev
-      - name: executing remote ssh commands
-        uses: appleboy/ssh-action@master
+      - name: Deploy docker-compose
+        uses: wshihadeh/docker-deployment-action@v1
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key : ${{ secrets.SERVER_KEY }}
-          script: |
-            git clone https://github.com/itkmitl-tcas/itkmitl-tcas-backend.git
+          remote_docker_host: ${{ secrets.SERVER_HOST }}
+          ssh_private_key: ${{ secrets.SERVER_KEY }}
+          ssh_public_key: ${{ secrets.SERVER_PUB }}
+          deployment_mode: docker-compose
+          stack_file_name: docker-compose.stag.yml
+          args: up --build -d
 
+
+  # - name: executing remote ssh commands
+  #   uses: appleboy/ssh-action@master
+  #   with:
+  #     host: ${{ secrets.SERVER_HOST }}
+  #     username: ${{ secrets.SERVER_USER }}
+  #     key : ${{ secrets.SERVER_KEY }}
+  #     script: |
+  #       echo ${{ github.event.repository.name }}
+  #       [ ! -d ${{ github.event.repository.name }} ] && git clone https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PASSWORD }}@github.com/itkmitl-tcas/itkmitl-tcas-backend.git
+            
   # cd ${{ github.event.repository.name }}
   # git pull --force
   # export FRONT_HOST=${{ secrets.STAG_FRONT_HOST }}
