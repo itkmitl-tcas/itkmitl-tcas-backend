@@ -16,26 +16,26 @@ services:
     networks: 
       - application-stag-network
       
-  # backend-stag:
-  #   container_name: backend-stag
-  #   restart: on-failure:5 
-  #   environment:
-  #     NODE_ENV: staging
-  #     APP_PORT: 3000 # container port
-  #     POSTGRES_HOST: database-stag
-  #     POSTGRES_USER: ${POSTGRES_USER}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #     POSTGRES_PORT: ${POSTGRES_PORT}
-  #     JWT_SECRET: ${JWT_SECRET}
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   depends_on:
-  #     - database-stag
-  #   ports: 
-  #     - ${APP_PORT}:3000 # expose port with prod port
-  #   networks: 
-  #     - application-stag-network
+  backend-stag:
+    container_name: backend-stag
+    restart: on-failure:5 
+    environment:
+      NODE_ENV: staging
+      APP_PORT: 3000 # container port
+      POSTGRES_HOST: database-stag
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - database-stag
+    ports: 
+      - ${APP_PORT}:3000 # expose port with prod port
+    networks: 
+      - application-stag-network
 volumes:
   database-stag-data: # named volumes can be managed easier using docker-compose
       driver: local

@@ -19,7 +19,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key : ${{ secrets.SERVER_KEY }}
           script: |
-            [ ! -d ${{ github.event.repository.name }} ] && git clone https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PASSWORD }}@github.com/vasin-peach/itkmitl-tcas-backend
+            [ ! -d ${{ github.event.repository.name }} ] && git clone https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PASSWORD }}@github.com/itkmitl-tcas/itkmitl-tcas-backend
             cd ${{ github.event.repository.name }}
             git checkout master
             git pull --force
