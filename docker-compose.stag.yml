@@ -22,7 +22,7 @@ services:
     environment:
       NODE_ENV: staging
       APP_PORT: 3000 # container port
-      POSTGRES_HOST: database-stag # container alias
+      POSTGRES_HOST: database-stag
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_PORT: ${POSTGRES_PORT}
