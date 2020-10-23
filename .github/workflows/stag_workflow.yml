@@ -12,6 +12,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          ref: dev
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@master
         with:
@@ -20,8 +24,19 @@ jobs:
           key : ${{ secrets.SERVER_KEY }}
           script: |
             echo ${{ github.event.repository.name }}
-            [ ! -d ${{ github.event.repository.name }} ] && git clone --branch dev https://github.com/itkmitl-tcas/itkmitl-tcas-backend
-            cd ${{ github.event.repository.name }}
+            [ ! -d ${{ github.event.repository.name }} ] && git clone --branch dev https://github.com/itkmitl-tcas/itkmitl-tcas-backend.git
+            
+  # cd ${{ github.event.repository.name }}
+  # git pull --force
+  # export FRONT_HOST=${{ secrets.STAG_FRONT_HOST }}
+  # export FRONT_PORT=${{ secrets.STAG_FRONT_PORT }}
+  # export APP_PORT=${{ secrets.STAG_APP_PORT }}
+  # export POSTGRES_USER=${{ secrets.STAG_POSTGRES_USER }}
+  # export POSTGRES_PASSWORD=${{ secrets.STAG_POSTGRES_PASSWORD }}
+  # export POSTGRES_PORT=${{ secrets.STAG_POSTGRES_PORT }}
+  # export JWT_SECRET=${{ secrets.STAG_JWT_SECRET }}
+  # docker-compose -f docker-compose.stag.yml down
+  # docker-compose -f docker-compose.stag.yml up -d --no-deps --build
 
             
 
