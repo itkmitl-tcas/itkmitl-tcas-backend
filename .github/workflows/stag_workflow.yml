@@ -41,6 +41,8 @@ jobs:
             export POSTGRES_PASSWORD=${{ secrets.STAG_POSTGRES_PASSWORD }}
             export POSTGRES_PORT=${{ secrets.STAG_POSTGRES_PORT }}
             export JWT_SECRET=${{ secrets.STAG_JWT_SECRET }}
+            echo $POSTGRES_USER
+            echo $POSTGRES_PASSWORD
             cd ${{ github.event.repository.name }}
             docker-compose -f docker-compose.stag.yml up -d --build --no-deps
 
