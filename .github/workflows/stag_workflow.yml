@@ -19,7 +19,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key : ${{ secrets.SERVER_KEY }}
           script: |
-            [ ! -d ${{ github.event.repository.name }} ] && git clone --branch dev https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PASSWORD }}@github.com/itkmitl-tcas/itkmitl-tcas-backend
+            echo ${{ github.event.repository.name }}
+            [ ! -d ${{ github.event.repository.name }} ] && git clone --branch dev https://github.com/itkmitl-tcas/itkmitl-tcas-backend
             cd ${{ github.event.repository.name }}
             git checkout dev
             git pull --force
