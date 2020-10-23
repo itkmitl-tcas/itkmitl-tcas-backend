@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Request, Response, NextFunction } from 'express';
-import { IUserSignIn, IToken, ITokenData, IUser } from '../modules/users/interface';
+import { IUserSignIn, IToken, ITokenData, IUser, IRequestWithUser } from '../modules/users/interface';
 import { successResponse, failureResponse, notFoundResponse, mismatchResponse } from '../exceptions/HttpExceptions';
 import { User } from '../modules/users/model';
 import env from '../config/environment';
@@ -12,6 +12,12 @@ export class AuthController {
 
   public healthy(req: Request, res: Response) {
     successResponse('Auth api healthy.', null, res);
+  }
+
+  /* --------------------------------- Verify --------------------------------- */
+  public async verify(req: IRequestWithUser, res: Response, next: NextFunction) {
+    if (req.user) return successResponse('verify token', true, res);
+    else return mismatchResponse(401, 'verify token', res);
   }
 
   /* --------------------------------- Sign In -------------------------------- */
@@ -28,7 +34,7 @@ export class AuthController {
     if (!reg_res) return next(failureResponse('REG', null, res));
     if (!reg_res.apply_id) return next(notFoundResponse(`${signInParams.apply_id}`, res));
     if (
-      reg_res.apply_id !== signInParams.apply_id ||
+      +reg_res.apply_id !== signInParams.apply_id ||
       reg_res.name !== signInParams.name ||
       reg_res.surname !== signInParams.surname
     )
@@ -62,8 +68,9 @@ export class AuthController {
     if (!result) return;
 
     const user: IUser = result[0];
-    const tokenPayload = { apply_id: user.apply_id, permission: user.permission };
+    const tokenPayload: any = { apply_id: user.apply_id, permission: user.permission };
     const tokenData = await AuthController.createToken(tokenPayload);
+    tokenPayload['token'] = tokenData;
     res.setHeader('Set-Cookie', [AuthController.createCookie(tokenData)]);
     successResponse('Sign in', tokenPayload, res);
   }
@@ -83,10 +90,10 @@ export class AuthController {
     if (!user) return next(mismatchResponse(401, `${signInParams.apply_id}`, res));
     if (user.permission < 2) return next(mismatchResponse(401, `${signInParams.apply_id} permission denind`, res));
 
-    const tokenPayload = { apply_id: user.apply_id, permission: user.permission };
-
+    const tokenPayload: any = { apply_id: user.apply_id, permission: user.permission };
     const tokenData = await AuthController.createToken(tokenPayload);
-    res.setHeader('Set-Cookie', [AuthController.createCookie(tokenData)]);
+    tokenPayload['token'] = tokenData;
+    // res.setHeader('Set-Cookie', [AuthController.createCookie(tokenData)]);
     successResponse('Sign in', tokenPayload, res);
   }
 
@@ -99,7 +106,7 @@ export class AuthController {
   /* ----------------------------------- JWT ---------------------------------- */
   static createToken(user: ITokenData): any {
     const expiresIn = 60 * 60; // an hour
-    const secret = env.getJWTSecret();
+    const secret = env.JWT_SECRET;
     const dataStoredInToken: ITokenData = {
       apply_id: user.apply_id,
       permission: user.permission,

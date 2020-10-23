@@ -7,6 +7,7 @@ dependencies:
   class-transformer: 0.3.1
   class-validator: 0.12.2
   cookie-parser: 1.4.5
+  cors: 2.8.5
   dotenv: 8.2.0
   express: 4.17.1
   fs-extra: 9.0.1
@@ -23,6 +24,7 @@ devDependencies:
   '@types/bluebird': 3.5.32
   '@types/body-parser': 1.19.0
   '@types/chai': 4.2.14
+  '@types/cors': 2.8.8
   '@types/dotenv': 8.2.0
   '@types/express': 4.17.8
   '@types/fs-extra': 9.0.2
@@ -40,7 +42,7 @@ devDependencies:
   eslint-config-prettier: 6.13.0_eslint@7.11.0
   eslint-plugin-prettier: 3.1.4_eslint@7.11.0+prettier@2.1.2
   jest: 26.6.0_ts-node@9.0.0
-  nodemon: 2.0.5
+  nodemon: 2.0.6
   npm-run-all: 4.1.5
   prettier: 2.1.2
   rimraf: 3.0.2
@@ -743,6 +745,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-t73xJJrvdTjXrn4jLS9VSGRbz0nUY3cl2DMGDU48lKl+HR9dbbjW2A9r3g40VA++mQpy6uuHg33gy7du2BKpog==
+  /@types/cors/2.8.8:
+    dependencies:
+      '@types/express': 4.17.8
+    dev: true
+    resolution:
+      integrity: sha512-fO3gf3DxU2Trcbr75O7obVndW/X5k8rJNZkLXlQWStTHhP71PkRqjwPIEI0yMnJdg9R9OasjU+Bsr+Hr1xy/0w==
   /@types/dotenv/8.2.0:
     dependencies:
       dotenv: 8.2.0
@@ -1837,6 +1845,15 @@ packages:
   /core-util-is/1.0.2:
     resolution:
       integrity: sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
+  /cors/2.8.5:
+    dependencies:
+      object-assign: 4.1.1
+      vary: 1.1.2
+    dev: false
+    engines:
+      node: '>= 0.10'
+    resolution:
+      integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==
   /cross-spawn/6.0.5:
     dependencies:
       nice-try: 1.0.5
@@ -4470,7 +4487,7 @@ packages:
     optional: true
     resolution:
       integrity: sha512-46z7DUmcjoYdaWyXouuFNNfUo6eFa94t23c53c+lG/9Cvauk4a98rAUp9672X5dxGdQmLpPzTxzu8f/OeEPaFA==
-  /nodemon/2.0.5:
+  /nodemon/2.0.6:
     dependencies:
       chokidar: 3.4.3
       debug: 3.2.6
@@ -4488,7 +4505,7 @@ packages:
     hasBin: true
     requiresBuild: true
     resolution:
-      integrity: sha512-6/jqtZvJdk092pVnD2AIH19KQ9GQZAKOZVy/yT1ueL6aoV+Ix7a1lVZStXzvEh0fP4zE41DDWlkVoHjR6WlozA==
+      integrity: sha512-4I3YDSKXg6ltYpcnZeHompqac4E6JeAMpGm8tJnB9Y3T0ehasLa4139dJOcCrB93HHrUMsCrKtoAlXTqT5n4AQ==
   /nopt/1.0.10:
     dependencies:
       abbrev: 1.1.1
@@ -5098,14 +5115,14 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
-  /pupa/2.0.1:
+  /pupa/2.1.0:
     dependencies:
       escape-goat: 2.1.1
     dev: true
     engines:
       node: '>=8'
     resolution:
-      integrity: sha512-hEJH0s8PXLY/cdXh66tNEQGndDrIKNqNC5xmrysZy3i5C3oEoLna7YAOad+7u125+zH1HNXUmGEkrhb3c2VriA==
+      integrity: sha512-Pj8EhJzFiPwnf4dEXpuUWwH8M/Yl4vpl4cN2RX1i3R77DWvbY5ZPKni7CCKkOYxz+XKt2fieemsV+WTZbIlYzg==
   /qs/6.5.2:
     dev: true
     engines:
@@ -6417,7 +6434,7 @@ packages:
       is-npm: 4.0.0
       is-yarn-global: 0.3.0
       latest-version: 5.1.0
-      pupa: 2.0.1
+      pupa: 2.1.0
       semver-diff: 3.1.1
       xdg-basedir: 4.0.0
     dev: true
@@ -6770,6 +6787,7 @@ specifiers:
   '@types/body-parser': ^1.19.0
   '@types/chai': ^4.2.14
   '@types/cookie-parser': ^1.4.2
+  '@types/cors': ^2.8.8
   '@types/dotenv': ^8.2.0
   '@types/express': ^4.17.8
   '@types/fs-extra': ^9.0.2
@@ -6788,6 +6806,7 @@ specifiers:
   class-transformer: ^0.3.1
   class-validator: ^0.12.2
   cookie-parser: ^1.4.5
+  cors: ^2.8.5
   dotenv: ^8.2.0
   eslint: ^7.11.0
   eslint-config-prettier: ^6.13.0
@@ -6798,7 +6817,7 @@ specifiers:
   jest: ^26.6.0
   jsonwebtoken: ^8.5.1
   multer: ^1.4.2
-  nodemon: ^2.0.5
+  nodemon: ^2.0.6
   npm-run-all: ^4.1.5
   pg: ^8.4.1
   pg-hstore: ^2.3.3

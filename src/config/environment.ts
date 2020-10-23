@@ -1,53 +1,21 @@
-enum Environments {
-  local_environment = 'local',
-  dev_environment = 'development',
-  prod_environment = 'production',
+enum EName {
+  local = 'local',
+  stag = 'development',
+  prod = 'production',
 }
 
-class Environment {
-  private environment: string;
+const Environment = {
+  HTTP_ONLY: process.env.NODE_ENV == EName.prod ? true : false, // optional not use now
+  FRONT_HOST: process.env.FRONT_HOST ? process.env.FRONT_HOST : 'http://localhost',
+  FRONT_PORT: process.env.FRONT_PORT ? process.env.FRONT_PORT : '8080',
+  APP_HOST: process.env.APP_HOST ? process.env.APP_HOST : 'http://localhost', // optional not use now
+  APP_PORT: process.env.APP_PORT ? process.env.APP_PORT : '3000',
+  POSTGRESS_HOST: process.env.POSTGRESS_HOST ? process.env.POSTGRESS_HOST : 'localhost',
+  POSTGRES_USER: process.env.POSTGRES_USER ? process.env.POSTGRES_USER : 'postgres',
+  POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD ? process.env.POSTGRES_PASSWORD : '14577',
+  POSTGRES_PORT: process.env.POSTGRES_PORT ? process.env.POSTGRES_PORT : 5432,
+  POSTGRES_DB: process.env.POSTGRES_DB ? process.env.POSTGRES_DB : 'postgres', // not use now postgres replace db name with user
+  JWT_SECRET: process.env.JWT_SECRET ? process.env.JWT_SECRET : 'secret',
+};
 
-  constructor(environment: string) {
-    this.environment = environment;
-  }
-
-  getPort(): number {
-    return this.environment === Environments.prod_environment ? +process.env.APP_PORT : +process.env.APP_PORT || 3000;
-  }
-
-  getHost(): string {
-    return this.environment === Environments.prod_environment
-      ? process.env.POSTGRES_HOST
-      : process.env.POSTGRES_HOST || 'localhost';
-  }
-
-  getDBName(): string {
-    return this.environment === Environments.prod_environment ? process.env.POSTGRES_DB : process.env.POSTGRES_DB || '';
-  }
-
-  getDBPort(): number {
-    return this.environment === Environments.prod_environment
-      ? +process.env.POSTGRES_PORT
-      : +process.env.POSTGRES_PORT || 5432;
-  }
-
-  getDBUsername(): string {
-    return this.environment === Environments.prod_environment
-      ? process.env.POSTGRES_USER
-      : process.env.POSTGRES_USER || 'postgres';
-  }
-
-  getDBPassword(): string {
-    return this.environment === Environments.prod_environment
-      ? process.env.POSTGRES_PASSWORD
-      : process.env.POSTGRES_PASSWORD || '14577';
-  }
-
-  getJWTSecret(): string {
-    return this.environment === Environments.prod_environment
-      ? process.env.JWT_SECRET
-      : process.env.JWT_SECRET || 'secret';
-  }
-}
-
-export default new Environment(process.env.NODE_ENV);
+export default Environment;

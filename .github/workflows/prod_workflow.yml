@@ -23,6 +23,8 @@ jobs:
             cd ${{ github.event.repository.name }}
             git checkout master
             git pull --force
+            export FRONT_HOST=${{ secrets.PROD_FRONT_HOST }}
+            export FRONT_PORT=${{ secrets.PROD_FRONT_PORT }}
             export APP_PORT=${{ secrets.PROD_APP_PORT }}
             export POSTGRES_USER=${{ secrets.PROD_POSTGRES_USER }}
             export POSTGRES_PASSWORD=${{ secrets.PROD_POSTGRES_PASSWORD }}

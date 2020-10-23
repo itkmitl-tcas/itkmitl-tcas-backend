@@ -1,28 +1,28 @@
 version: '3'
 services:
-  database-dev:
-    container_name: database-dev
+  database-stag:
+    container_name: database-stag
     image: "postgres" # use latest official postgres version
     environment:
       POSTGRES_USER: ${POSTGRES_USER} # configure postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - database-dev-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+      - database-stag-data:/var/lib/postgresql/data/ # persist data even if container shuts down
     expose:
       - ${POSTGRES_PORT}
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     command: -p ${POSTGRES_PORT}
     networks: 
-      - application-dev-network
+      - application-stag-network
       
-  backend-dev:
-    container_name: backend-dev
+  backend-stag:
+    container_name: backend-stag
     restart: on-failure:5 
     environment:
-      NODE_ENV: development
+      NODE_ENV: staging
       APP_PORT: 3000 # container port
-      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_HOST: database-stag # container alias
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_PORT: ${POSTGRES_PORT}
@@ -31,14 +31,14 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - database-dev
+      - database-stag
     ports: 
       - ${APP_PORT}:3000 # expose port with prod port
     networks: 
-      - application-dev-network
+      - application-stag-network
 volumes:
-  database-dev-data: # named volumes can be managed easier using docker-compose
+  database-stag-data: # named volumes can be managed easier using docker-compose
       driver: local
 networks:
-  application-dev-network:
+  application-stag-network:
     driver: bridge 

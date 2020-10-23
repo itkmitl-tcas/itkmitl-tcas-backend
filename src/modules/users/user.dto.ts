@@ -1,9 +1,9 @@
 import { IsString, IsEmail, IsDecimal, IsOptional, IsNotEmpty, IsInt, IsNumberString } from 'class-validator';
 
 export class CreateUserDto {
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  public apply_id: string;
+  public apply_id: number;
 
   @IsString()
   @IsNotEmpty()
@@ -33,27 +33,27 @@ export class CreateUserDto {
   @IsOptional()
   @IsNotEmpty()
   @IsDecimal()
-  public gpax: string;
+  public gpax: number;
 
   @IsOptional()
   @IsNotEmpty()
   @IsDecimal()
-  public gpax_match: string;
+  public gpax_match: number;
 
   @IsOptional()
   @IsNotEmpty()
   @IsDecimal()
-  public gpax_eng: string;
+  public gpax_eng: number;
 
   @IsOptional()
   @IsNotEmpty()
   @IsDecimal()
-  public gpax_com: string;
+  public gpax_com: number;
 
   @IsOptional()
   @IsNotEmpty()
   @IsDecimal()
-  public credit_total: string;
+  public credit_total: number;
 
   @IsOptional()
   @IsNotEmpty()
@@ -77,8 +77,8 @@ export class CreateUserDto {
 }
 
 export class SignInDto {
-  @IsString()
-  public apply_id: string;
+  @IsInt()
+  public apply_id: number;
 
   @IsString()
   public name: string;

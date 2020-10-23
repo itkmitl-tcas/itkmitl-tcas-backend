@@ -51,7 +51,6 @@ export class DocsController {
     const user = await User.findByPk(req.user.apply_id);
     const apply_id = user.apply_id;
     const permission = user.permission;
-    console.log(permission);
 
     // permission 1 can only get own docs
     if (permission == 1) {

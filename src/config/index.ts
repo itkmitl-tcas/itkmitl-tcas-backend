@@ -3,8 +3,11 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
+import cors from 'cors';
 import { UserRoutes, AuthRoutes } from '../routes/user_routes';
 import { DocRoutes } from '../routes/docs_routes';
+import env from './environment';
+import { Request, Response, NextFunction, Application } from 'express';
 
 class App {
   public app: express.Application;
@@ -15,20 +18,20 @@ class App {
   constructor() {
     this.app = express();
     this.config();
+    this.app.use(cors({ origin: `${env.FRONT_HOST}:${env.FRONT_PORT}`, credentials: true }));
     this.initSentryIO();
     this.user_routes.route(this.app);
     this.auth_routes.route(this.app);
     this.docs_routes.route(this.app);
-
     this.app.get('/debug-sentry', function mainHandler(req, res) {
       throw new Error('My first Sentry error!');
     });
   }
 
   private config(): void {
+    this.app.use(cookieParser());
     this.app.use(bodyParser.json()); // support application/json type post data
     this.app.use(bodyParser.urlencoded({ extended: false })); //support application/x-www-form-urlencoded post data
-    this.app.use(cookieParser());
   }
 
   private initSentryIO(): void {
