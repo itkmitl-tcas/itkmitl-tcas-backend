@@ -42,8 +42,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
-            echo ${{ secret.SERVER_HOST }}
-            echo ${{ secret.SERVER_USER }}
+            echo ${{ secrets.SERVER_HOST }}
+            echo ${{ secrets.SERVER_USER }}
             cd ${{ github.event.repository.name }}
             docker-compose -f docker-compose.stag.yml up -d --build -no-deps
   # - name: executing remote ssh commands
