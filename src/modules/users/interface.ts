@@ -1,7 +1,7 @@
 import { Request } from 'express';
 
 export interface IUser {
-  apply_id: string;
+  apply_id: number;
   prename?: string;
   name?: string;
   surname?: string;
@@ -17,10 +17,11 @@ export interface IUser {
   study_field?: string;
   apply_type?: string;
   permission?: number;
+  password?: string;
 }
 
 export interface IUserSignIn {
-  apply_id: string;
+  apply_id: number;
   prename: string;
   name: string;
   surname: string;
@@ -35,6 +36,7 @@ export interface IUserSignIn {
   credit_total: string;
   study_field: string;
   apply_type: string;
+  password: string;
 }
 
 export interface IToken {
@@ -43,10 +45,10 @@ export interface IToken {
 }
 
 export interface ITokenData {
-  apply_id: string;
+  apply_id: number;
   permission: number;
 }
 
 export interface IRequestWithUser extends Request {
-  user: IUser;
+  user: ITokenData;
 }

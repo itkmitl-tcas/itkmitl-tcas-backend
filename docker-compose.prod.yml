@@ -2,7 +2,7 @@ version: '3'
 services:
   database-prod:
     container_name: database-prod
-    image: "postgres" # use latest official postgres version
+    image: postgres:13 # use latest official postgres version
     environment:
       POSTGRES_USER: ${POSTGRES_USER} # configure postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -21,7 +21,7 @@ services:
     environment:
       NODE_ENV: production
       APP_PORT: 3000 # container port
-      POSTGRES_HOST: database-prod
+      POSTGRES_HOST: database-prod # container alias
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_PORT: ${POSTGRES_PORT}

@@ -1,8 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
 import { database } from '../../config/database';
+import { Docs } from '../document/model';
 
 export class User extends Model {
-  apply_id: string;
+  apply_id: number;
   prename?: string;
   name?: string;
   surname?: string;
@@ -18,20 +19,18 @@ export class User extends Model {
   study_field?: string;
   apply_type?: string;
   permission?: number;
+  static Docs: any;
 }
 
 User.init(
   {
-    _id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
     apply_id: {
-      type: DataTypes.STRING(128),
+      type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
       unique: true,
     },
+
     apply_type: {
       type: DataTypes.STRING(128),
       allowNull: true,
@@ -63,11 +62,11 @@ User.init(
     /* ------------------------------- School Info ------------------------------ */
     school_name: {
       type: DataTypes.STRING(128),
-      allowNull: false,
+      allowNull: true,
     },
     gpax: {
       type: DataTypes.DECIMAL(3, 2),
-      allowNull: false,
+      allowNull: true,
     },
     gpax_match: {
       type: DataTypes.DECIMAL(3, 2),
@@ -117,5 +116,14 @@ User.init(
     sequelize: database, // this bit is important
   },
 );
+
+User.hasOne(Docs, {
+  sourceKey: 'apply_id',
+  foreignKey: 'apply_id',
+});
+Docs.belongsTo(User, {
+  targetKey: 'apply_id',
+  foreignKey: 'apply_id',
+});
 
 User.sync({ alter: true });

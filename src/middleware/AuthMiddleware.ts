@@ -9,7 +9,7 @@ export default function AuthMiddleware<T>(permission = 1): RequestHandler {
   return async (request: IRequestWithUser, res: Response, next: NextFunction) => {
     const cookies = request.cookies;
     if (cookies && cookies.Authorization) {
-      const secret = env.getJWTSecret();
+      const secret = env.JWT_SECRET;
       try {
         const verificationResponse = jwt.verify(cookies.Authorization, secret) as ITokenData;
         const apply_id = verificationResponse.apply_id;
@@ -22,14 +22,14 @@ export default function AuthMiddleware<T>(permission = 1): RequestHandler {
           if (user.permission < permission) {
             mismatchResponse(401, `credentials permission denied (${user.permission}|${permission})`, res);
           } else {
-            request.user = user;
+            request.user = verificationResponse;
             next();
           }
         } else {
           mismatchResponse(401, 'credentials', res);
         }
       } catch (err) {
-        mismatchResponse(401, 'credentials', res);
+        mismatchResponse(401, 'credentials token expired', res);
       }
     } else {
       mismatchResponse(401, 'credentials no token', res);
