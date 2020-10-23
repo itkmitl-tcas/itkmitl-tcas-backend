@@ -40,7 +40,7 @@ jobs:
             export POSTGRES_PORT=${{ secrets.STAG_POSTGRES_PORT }}
             export JWT_SECRET=${{ secrets.STAG_JWT_SECRET }}
             cd ${{ github.event.repository.name }}
-            docker-compose -f docker-compose.stag.yml down --rmi local --remove-orphans
+            docker-compose -f docker-compose.stag.yml down --rmi local
             docker-compose -f docker-compose.stag.yml up -d --build --no-deps --force-recreate
 
             
