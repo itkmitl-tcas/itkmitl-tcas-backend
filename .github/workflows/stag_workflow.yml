@@ -42,9 +42,11 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
+            echo $FRONT_HOST
+            echo $JWT_SECRET
             cd ${{ github.event.repository.name }}
             docker-compose -f docker-compose.stag.yml up -d --build --no-deps
-            
+
   # - name: executing remote ssh commands
   #   uses: appleboy/ssh-action@master
   #   with:
