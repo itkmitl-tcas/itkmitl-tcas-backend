@@ -5,6 +5,8 @@ import ValidationMiddleware from '../middleware/ValidateMiddleware';
 import AuthMiddleware from '../middleware/AuthMiddleware';
 import { CreateUserDto } from '../modules/users/user.dto';
 import { SignInDto, SignInTDto } from '../modules/users/user.dto';
+import { User } from '../modules/users/model';
+import { successResponse, failureResponse, notFoundResponse, mismatchResponse } from '../exceptions/HttpExceptions';
 
 export class UserRoutes {
   private user_controller: UserController = new UserController();
@@ -30,5 +32,15 @@ export class AuthRoutes {
     app.route('/auth/signout').post(AuthMiddleware(1), this.auth_controller.signOut);
     app.route('/auth/signin/teacher').post(ValidationMiddleware(SignInTDto, false), this.auth_controller.signInTeacher);
     // maybe change password?
+  }
+}
+
+export class HealthyRoutes {
+  public route(app: Application): void {
+    app.route('/').get((req, res) => {
+      User.findAll()
+        .then(() => successResponse('Api healthy.', null, res))
+        .catch(() => process.exit(1));
+    });
   }
 }

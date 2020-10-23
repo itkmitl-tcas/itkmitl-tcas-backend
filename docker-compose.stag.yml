@@ -2,7 +2,7 @@ version: '3'
 services:
   database-stag:
     container_name: database-stag
-    image: "postgres" # use latest official postgres version
+    image: postgres:13 # use latest official postgres version
     environment:
       POSTGRES_USER: ${POSTGRES_USER} # configure postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -36,6 +36,12 @@ services:
       - ${APP_PORT}:3000 # expose port with prod port
     networks: 
       - application-stag-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${APP_PORT}/auth"]
+      interval: 10s
+      timeout: 10s
+    restart: on-failure:5
+
 volumes:
   database-stag-data: # named volumes can be managed easier using docker-compose
       driver: local

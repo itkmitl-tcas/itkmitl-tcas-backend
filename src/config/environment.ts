@@ -9,7 +9,7 @@ const Environment = {
   FRONT_HOST: process.env.FRONT_HOST ? process.env.FRONT_HOST : 'http://localhost',
   FRONT_PORT: process.env.FRONT_PORT ? process.env.FRONT_PORT : '8080',
   APP_HOST: process.env.APP_HOST ? process.env.APP_HOST : 'http://localhost', // optional not use now
-  APP_PORT: process.env.APP_PORT ? process.env.APP_PORT : '3000',
+  APP_PORT: process.env.APP_PORT ? process.env.APP_PORT : '3001',
   POSTGRESS_HOST: process.env.POSTGRESS_HOST ? process.env.POSTGRESS_HOST : 'localhost',
   POSTGRES_USER: process.env.POSTGRES_USER ? process.env.POSTGRES_USER : 'postgres',
   POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD ? process.env.POSTGRES_PASSWORD : '14577',
