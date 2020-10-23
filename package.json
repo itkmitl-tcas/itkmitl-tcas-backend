@@ -5,7 +5,7 @@
   "main": "./dist/server.js",
   "scripts": {
     "dev": "tsc && nodemon ./dist/server.js",
-    "prod": "tsc && nodemon ./dist/server.js",
+    "prod": "tsc && node ./dist/server.js",
     "lint:fix": "eslint ./ --fix",
     "test": "jest",
     "test:init": "ts-jest config:init"

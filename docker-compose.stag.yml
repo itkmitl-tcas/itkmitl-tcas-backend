@@ -18,7 +18,7 @@ services:
       
   backend-stag:
     container_name: backend-stag
-    restart: on-failure:5 
+    restart: on-failure:5
     environment:
       NODE_ENV: staging
       APP_PORT: 3000 # container port
@@ -36,11 +36,6 @@ services:
       - ${APP_PORT}:3000 # expose port with prod port
     networks: 
       - application-stag-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${APP_PORT}/auth"]
-      interval: 10s
-      timeout: 10s
-    restart: on-failure:5
 
 volumes:
   database-stag-data: # named volumes can be managed easier using docker-compose
