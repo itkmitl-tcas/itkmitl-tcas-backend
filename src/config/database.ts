@@ -6,5 +6,10 @@ const connectString = `postgres://${env.POSTGRES_USER}:${env.POSTGRES_PASSWORD}@
   env.POSTGRES_PORT
 }/${env.POSTGRES_DB || ''}`;
 
-const sequelize = new Sequelize(connectString, { logging: process.env.NODE_ENV == 'production' ? true : false });
+let sequelize: any;
+try {
+  sequelize = new Sequelize(connectString, { logging: process.env.NODE_ENV == 'production' ? true : false });
+} catch (err) {
+  process.exit(1);
+}
 export const database = sequelize;
