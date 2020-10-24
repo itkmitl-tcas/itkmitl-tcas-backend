@@ -1,9 +1,8 @@
-FROM node:10
+FROM node:15-alpine
 
 
 # install pnpm
-RUN apt update
-RUN apt install curl
+RUN apk --no-cache add curl
 RUN curl -L https://raw.githubusercontent.com/pnpm/self-installer/master/install.js | node
 
 WORKDIR /usr/src/itkmitl-tcas-backend
