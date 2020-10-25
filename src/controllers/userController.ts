@@ -22,6 +22,7 @@ export class UserController {
 
   /* ----------------------------- Get User By ID ----------------------------- */
   public get(req: IRequestWithUser, res: Response, next: NextFunction) {
+    // failureResponse('get user', null, res);
     const apply_id = req.body.apply_id;
     const auth_permission = req.user.permission;
     const auth_apply_id = req.user.apply_id;

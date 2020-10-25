@@ -13,7 +13,7 @@ export class UserRoutes {
 
   public route(app: Application): void {
     app.route('/user').get(this.user_controller.healthy);
-    app.route('/user/get').post(AuthMiddleware(), ValidationMiddleware(GetUserDto, false), this.user_controller.get);
+    app.route('/user/get').post(AuthMiddleware(1), ValidationMiddleware(GetUserDto, false), this.user_controller.get);
     app.route('/user').post(AuthMiddleware(3), ValidationMiddleware(CreateUserDto, false), this.user_controller.create);
     app.route('/user').patch(AuthMiddleware(1), ValidationMiddleware(CreateUserDto, true), this.user_controller.update);
     app.route('/user').delete(AuthMiddleware(3), this.user_controller.delete);

@@ -35,8 +35,8 @@ export interface IUserSignIn {
   gpax_com: string;
   credit_total: string;
   study_field: string;
-  apply_type: string;
   password: string;
+  type: string;
 }
 
 export interface IToken {

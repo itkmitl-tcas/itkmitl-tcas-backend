@@ -16,7 +16,16 @@ export class AuthController {
 
   /* --------------------------------- Verify --------------------------------- */
   public async verify(req: IRequestWithUser, res: Response, next: NextFunction) {
-    if (req.user) return successResponse('verify token', true, res);
+    const user = await User.findOne({
+      where: {
+        apply_id: req.user.apply_id,
+      },
+    });
+    const payload = {
+      apply_id: user.apply_id,
+      permission: user.permission,
+    };
+    if (req.user) return successResponse('verify token', payload, res);
     else return mismatchResponse(401, 'verify token', res);
   }
 
@@ -52,6 +61,7 @@ export class AuthController {
       pay: reg_res.pay == '1' ? true : false,
       prename: reg_res.prename,
       school_name: reg_res.school_name,
+      apply_type: reg_res.type,
     };
     // save to db
     const result: any = await User.findOrCreate<User>({
