@@ -111,7 +111,7 @@ export class AuthController {
 
   /* -------------------------------- Sign Out -------------------------------- */
   public async signOut(request: Request, res: Response) {
-    res.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
+    res.setHeader('Set-Cookie', ['Authorization=; Path=/; Max-age=0']);
     successResponse('Sign out', null, res);
   }
 
