@@ -21,20 +21,19 @@ export class UserController {
   }
 
   /* ----------------------------- Get User By ID ----------------------------- */
-  public get(req: Request, res: Response, next: NextFunction) {
-    const apply_id = req.params.apply_id;
-    User.findAll({
-      where: {
-        apply_id: apply_id,
-      },
-      include: { model: Docs },
+  public get(req: IRequestWithUser, res: Response, next: NextFunction) {
+    const apply_id = req.body.apply_id;
+    const auth_permission = req.user.permission;
+    const auth_apply_id = req.user.apply_id;
+    const where = auth_permission > 1 ? { apply_id: apply_id } : { apply_id: auth_apply_id };
+    User.findOne({
+      where: where,
     })
-      .then((nodes: Array<User>) => {
-        if (nodes.length) successResponse(apply_id, nodes, res);
+      .then((node) => {
+        if (node) successResponse(apply_id, node, res);
         else next(notFoundResponse(apply_id, res));
       })
       .catch((err) => {
-        // const errors = err.errors.map((item: any) => item.message);
         failureResponse('get user', err, res);
       });
   }

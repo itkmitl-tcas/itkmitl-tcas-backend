@@ -3,7 +3,7 @@ import { AuthController } from '../controllers/authController';
 import { UserController } from '../controllers/userController';
 import ValidationMiddleware from '../middleware/ValidateMiddleware';
 import AuthMiddleware from '../middleware/AuthMiddleware';
-import { CreateUserDto } from '../modules/users/user.dto';
+import { CreateUserDto, GetUserDto } from '../modules/users/user.dto';
 import { SignInDto, SignInTDto } from '../modules/users/user.dto';
 import { User } from '../modules/users/model';
 import { successResponse, failureResponse, notFoundResponse, mismatchResponse } from '../exceptions/HttpExceptions';
@@ -13,12 +13,10 @@ export class UserRoutes {
 
   public route(app: Application): void {
     app.route('/user').get(this.user_controller.healthy);
-
-    app
-      .get('/user/:apply_id', AuthMiddleware(2), this.user_controller.get)
-      .post('/user', AuthMiddleware(3), ValidationMiddleware(CreateUserDto, false), this.user_controller.create)
-      .patch('/user', AuthMiddleware(1), ValidationMiddleware(CreateUserDto, true), this.user_controller.update)
-      .delete('/user', AuthMiddleware(3), this.user_controller.delete);
+    app.route('/user/get').post(AuthMiddleware(), ValidationMiddleware(GetUserDto, false), this.user_controller.get);
+    app.route('/user').post(AuthMiddleware(3), ValidationMiddleware(CreateUserDto, false), this.user_controller.create);
+    app.route('/user').patch(AuthMiddleware(1), ValidationMiddleware(CreateUserDto, true), this.user_controller.update);
+    app.route('/user').delete(AuthMiddleware(3), this.user_controller.delete);
   }
 }
 
