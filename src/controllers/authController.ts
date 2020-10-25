@@ -118,6 +118,6 @@ export class AuthController {
   }
 
   static createCookie(tokenData: IToken) {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
+    return `Authorization=${tokenData.token}; HttpOnly; Path=/; Max-Age=${tokenData.expiresIn}`;
   }
 }
