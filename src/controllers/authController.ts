@@ -39,6 +39,8 @@ export class AuthController {
       .then((res) => res.data)
       .catch(() => false);
 
+    if (reg_res.pay == '0') return mismatchResponse(406, `${signInParams.apply_id} please pay`, res); // not accept
+
     // validate reg response
     if (!reg_res) return next(failureResponse('REG', null, res));
     if (!reg_res.apply_id) return next(notFoundResponse(`${signInParams.apply_id}`, res));
@@ -47,7 +49,7 @@ export class AuthController {
       reg_res.name !== signInParams.name ||
       reg_res.surname !== signInParams.surname
     )
-      return next(mismatchResponse(401, `${signInParams.apply_id}`, res));
+      return next(mismatchResponse(404, `${signInParams.apply_id}`, res)); // bad request
 
     // define payload for create
     const payload = {
