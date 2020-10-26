@@ -36,10 +36,14 @@ services:
       - ${APP_PORT}:3000 # expose port with prod port
     networks: 
       - application-stag-network
+    volumes:
+      - backend-stag-data:/usr/src/itkmitl-tcas-backend/upload # persist data even if container shuts down
 
 volumes:
   database-stag-data: # named volumes can be managed easier using docker-compose
-      driver: local
+    driver: local
+  backend-stag-data:
+    driver: local
 networks:
   application-stag-network:
     driver: bridge 
