@@ -24,6 +24,7 @@ services:
       NODE_ENV: production
       APP_PORT: 3000 # container port
       FRONT_HOST: ${FRONT_HOST}
+      FRONT_PORT: ${FRONT_PORT}
       POSTGRES_HOST: database-prod # container alias
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
