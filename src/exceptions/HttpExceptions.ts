@@ -14,6 +14,7 @@ export function createdResponse(message: string, DATA: any, res: Response) {
     MESSAGE: `Resource ${message} has been created`,
     DATA,
   });
+  // res.end();
 }
 
 export function updatedResponse(message: string, DATA: any, res: Response) {
@@ -22,6 +23,7 @@ export function updatedResponse(message: string, DATA: any, res: Response) {
     MESSAGE: `Resource ${message} has beed updated`,
     DATA,
   });
+  // res.end();
 }
 
 export function deletedResponse(message: string, DATA: any, res: Response) {

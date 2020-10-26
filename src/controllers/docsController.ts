@@ -15,6 +15,7 @@ import { upsert } from './helper';
 import multer, { MulterError } from 'multer';
 import fs from 'fs';
 import env from '../config/environment';
+import multiparty from 'multiparty';
 
 export class DocsController {
   /* --------------------------------- Healthy -------------------------------- */
@@ -56,46 +57,47 @@ export class DocsController {
   }
 
   /* --------------------------------- Create --------------------------------- */
-  public async create(req: IRequestWithUser, res: Response) {
+  public async create(req: any, res: Response) {
     // https://stackoverflow.com/a/35850052
     const apply_id = req.user.apply_id;
-    const storage = multer.diskStorage({
-      destination: (req: IRequestWithUser, file, cb) => {
+    let test;
+    const storage = await multer.diskStorage({
+      destination: (req, file, cb) => {
         fs.mkdirSync(`upload/${apply_id}`, { recursive: true });
         cb(null, `upload/${apply_id}`);
       },
-      filename: (req: IRequestWithUser, file, cb) => {
+      filename: (req, file, cb) => {
+        test = file;
         cb(null, `${file.fieldname}.pdf`);
       },
     });
     const upload = multer({ storage: storage }).any();
-    upload(req, res, (err: any) => {
-      if (err) {
-        console.log(err);
-        return res.end('Error uploading file');
-      } else {
-        res.end('File has been uploaded');
-      }
+    await upload(req, res, (err: any) => {
+      if (err) return failureResponse('upload document', err.message, res);
     });
 
-    // ! Save to database
-    const base_uri = `${env.APP_HOST}:${env.APP_PORT}/docs`;
-    const payload = {
-      apply_id: apply_id,
-      transcript: `${base_uri}/transcript/${apply_id}`,
-      identity_card: `${base_uri}/identity_card/${apply_id}`,
-      student_card: `${base_uri}/student_card/${apply_id}`,
-      state: true,
-    };
-
-    // update document or create
-    await upsert(payload, { apply_id: apply_id }, Docs)
-      .then(() => {
-        createdResponse(`${apply_id}`, payload, res);
-      })
-      .catch((err: { message: any }) => {
-        insufficientParameters(err.message, res);
-      });
+    const form = new multiparty.Form();
+    await form.parse(req, async (err, fields, files) => {
+      // ! Save to database
+      const base_uri = `${env.APP_HOST}:${env.APP_PORT}/docs`;
+      const payload = {
+        apply_id: apply_id,
+        transcript: `${base_uri}/transcript/${apply_id}`,
+        identity_card: `${base_uri}/identity_card/${apply_id}`,
+        student_card: `${base_uri}/student_card/${apply_id}`,
+        name_change: files.name_change ? `${base_uri}/name_change/${apply_id}` : null,
+        state: true,
+      };
+      // update document or create
+      await upsert(payload, { apply_id: apply_id }, Docs)
+        .then(() => {
+          createdResponse(`${apply_id}`, payload, res);
+        })
+        .catch((err: { message: any }) => {
+          console.log(err);
+          insufficientParameters(err.message, res);
+        });
+    });
   }
 
   /* ----------------------------------- Get ---------------------------------- */
