@@ -71,12 +71,12 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsNotEmpty()
-  @IsNumberString()
+  @IsInt()
   public permission: string;
 
   @IsOptional()
   @IsNotEmpty()
-  @IsNumberString()
+  @IsInt()
   public step: string;
 }
 

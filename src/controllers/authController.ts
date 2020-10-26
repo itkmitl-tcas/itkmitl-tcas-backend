@@ -6,6 +6,7 @@ import { User } from '../modules/users/model';
 import env from '../config/environment';
 import jwt from 'jsonwebtoken';
 import { SignInTDto } from '../modules/users/user.dto';
+import { upsert } from './helper';
 
 export class AuthController {
   /* --------------------------------- Healthy -------------------------------- */
@@ -24,6 +25,7 @@ export class AuthController {
     const payload = {
       apply_id: user.apply_id,
       permission: user.permission,
+      step: user.step,
     };
     if (req.user) return successResponse('verify token', payload, res);
     else return mismatchResponse(401, 'verify token', res);
@@ -66,20 +68,13 @@ export class AuthController {
       apply_type: reg_res.type,
     };
     // save to db
-    const result: any = await User.findOrCreate<User>({
-      where: {
-        apply_id: payload.apply_id,
-      },
-      defaults: payload,
-    })
-      .then((result) => result)
-      .catch((err) => {
-        return failureResponse('create user', err, res);
-      });
+    const result: IUser = await upsert(payload, { apply_id: payload.apply_id }, User)
+      .then((result: IUser) => result)
+      .catch((err: Error) => failureResponse('create user', err.message, res));
 
     if (!result) return;
 
-    const user: IUser = result[0];
+    const user: IUser = result;
     const tokenPayload: any = { apply_id: user.apply_id, permission: user.permission };
     const tokenData = await AuthController.createToken(tokenPayload);
     tokenPayload['token'] = tokenData;
