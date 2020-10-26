@@ -8,7 +8,8 @@
     "prod": "tsc && node ./dist/server.js",
     "lint:fix": "eslint ./ --fix",
     "test": "jest",
-    "test:init": "ts-jest config:init"
+    "test:init": "ts-jest config:init",
+    "commit": "cz"
   },
   "exclude": [
     "node_modules"
@@ -46,6 +47,7 @@
     "@typescript-eslint/eslint-plugin": "^4.4.1",
     "@typescript-eslint/parser": "^4.4.1",
     "chai": "^4.2.0",
+    "commitizen": "^4.2.2",
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.13.0",
     "eslint-plugin-prettier": "^3.1.4",
