@@ -35,9 +35,14 @@ services:
       - ${APP_PORT}:3000 # expose port with prod port
     networks: 
       - application-prod-network
+    volumes:
+    - backend-prod-data:/usr/src/itkmitl-tcas-backend/upload
+
 volumes:
     database-prod-data: # named volumes can be managed easier using docker-compose
-        driver: local
+      driver: local
+    backend-prod-data:
+      driver: local
 networks:
   application-prod-network:
     driver: bridge  
