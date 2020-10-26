@@ -79,13 +79,18 @@ export class DocsController {
     const form = new multiparty.Form();
     await form.parse(req, async (err, fields, files) => {
       // ! Save to database
+      const docsData = await Docs.findOne({
+        where: {
+          apply_id: apply_id,
+        },
+      });
       const base_uri = `${env.APP_HOST}:${env.APP_PORT}/docs`;
       const payload = {
         apply_id: apply_id,
         transcript: `${base_uri}/transcript/${apply_id}`,
         identity_card: `${base_uri}/identity_card/${apply_id}`,
         student_card: `${base_uri}/student_card/${apply_id}`,
-        name_change: files.name_change ? `${base_uri}/name_change/${apply_id}` : null,
+        name_change: files.name_change || docsData.name_change ? `${base_uri}/name_change/${apply_id}` : null,
         state: true,
       };
       // update document or create
