@@ -1,13 +1,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import * as Sentry from '@sentry/node';
-import * as Tracing from '@sentry/tracing';
 import cors from 'cors';
 import { UserRoutes, AuthRoutes, HealthyRoutes } from '../routes/user_routes';
 import { DocRoutes } from '../routes/docs_routes';
 import env from './environment';
-import { Request, Response, NextFunction, Application } from 'express';
 
 class App {
   public app: express.Application;
@@ -29,7 +26,7 @@ class App {
   private config(): void {
     this.app.use(cookieParser());
     this.app.use(bodyParser.json()); // support application/json type post data
-    this.app.use(bodyParser.urlencoded({ extended: false })); //support application/x-www-form-urlencoded post data
+    this.app.use(bodyParser.urlencoded({ extended: true })); //support application/x-www-form-urlencoded post data
   }
 }
 export default new App().app;
