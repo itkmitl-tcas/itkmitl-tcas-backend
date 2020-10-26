@@ -2,6 +2,7 @@ version: '3'
 services:
   database-stag:
     container_name: database-stag
+    restart: always
     image: postgres:13-alpine # use latest official postgres version
     environment:
       POSTGRES_USER: ${POSTGRES_USER} # configure postgres
@@ -18,7 +19,7 @@ services:
       
   backend-stag:
     container_name: backend-stag
-    restart: on-failure:5
+    restart: always
     environment:
       NODE_ENV: staging
       APP_PORT: 3000 # container port

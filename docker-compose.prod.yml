@@ -2,6 +2,7 @@ version: '3'
 services:
   database-prod:
     container_name: database-prod
+    restart: always
     image: postgres:13-alpine # use latest official postgres version
     environment:
       POSTGRES_USER: ${POSTGRES_USER} # configure postgres
@@ -18,6 +19,7 @@ services:
       
   backend-prod:
     container_name: backend-prod
+    restart: always
     environment:
       NODE_ENV: production
       APP_PORT: 3000 # container port
