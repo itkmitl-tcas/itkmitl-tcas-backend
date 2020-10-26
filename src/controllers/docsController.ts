@@ -12,6 +12,9 @@ import { CreateDocsDto } from '../modules/document/docs.dto';
 import { User } from '../modules/users/model';
 import { IRequestWithUser } from '../modules/users/interface';
 import { upsert } from './helper';
+import multer, { MulterError } from 'multer';
+import fs from 'fs';
+import env from '../config/environment';
 
 export class DocsController {
   /* --------------------------------- Healthy -------------------------------- */
@@ -19,23 +22,74 @@ export class DocsController {
     successResponse('Document api healthy.', null, res);
   }
 
-  /* --------------------------------- Create --------------------------------- */
-  public async create(req: IRequestWithUser, res: Response) {
-    const payload: CreateDocsDto = req.body;
-    const permission = (await User.findByPk(req.user.apply_id)).permission;
-    let apply_id: number;
+  /* ---------------------------------- Read ---------------------------------- */
+  public async view(req: IRequestWithUser, res: Response) {
+    // https://stackoverflow.com/q/11598274/10483617
 
-    // validate permission
-    if (permission <= 2) {
-      // permission 1 can create(update) own document
-      apply_id = req.user.apply_id;
-    } else if (permission >= 3) {
-      // permission 3 above can create(update) other document
-      apply_id = req.body.apply_id || null;
+    let target_id: number;
+    const user_id = req.user.apply_id;
+    const user_permission = req.user.permission;
+    const params_id = req.params.apply_id;
+    const type = req.params.type;
+
+    if (!params_id) {
+      target_id = user_id;
+    } else if (user_permission >= 2 || user_id == parseInt(params_id)) {
+      target_id = +params_id;
+    } else {
+      notFoundResponse(`${type}`, res);
     }
 
-    // update document
-    upsert(payload, { apply_id: apply_id }, Docs)
+    const path = `upload/${target_id}/${type}.pdf`;
+
+    try {
+      const file = fs.readFileSync(path);
+      const stat = fs.statSync(path);
+      res.setHeader('Content-Length', stat.size);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `inline; filename=${type}`);
+      res.send(file);
+    } catch (err) {
+      console.log(err.message);
+      notFoundResponse(`${type}`, res);
+    }
+  }
+
+  /* --------------------------------- Create --------------------------------- */
+  public async create(req: IRequestWithUser, res: Response) {
+    // https://stackoverflow.com/a/35850052
+    const apply_id = req.user.apply_id;
+    const storage = multer.diskStorage({
+      destination: (req: IRequestWithUser, file, cb) => {
+        fs.mkdirSync(`upload/${apply_id}`, { recursive: true });
+        cb(null, `upload/${apply_id}`);
+      },
+      filename: (req: IRequestWithUser, file, cb) => {
+        cb(null, `${file.fieldname}.pdf`);
+      },
+    });
+    const upload = multer({ storage: storage }).any();
+    upload(req, res, (err: any) => {
+      if (err) {
+        console.log(err);
+        return res.end('Error uploading file');
+      } else {
+        res.end('File has been uploaded');
+      }
+    });
+
+    // ! Save to database
+    const base_uri = `${env.APP_HOST}:${env.APP_PORT}/docs`;
+    const payload = {
+      apply_id: apply_id,
+      transcript: `${base_uri}/transcript/${apply_id}`,
+      identity_card: `${base_uri}/identity_card/${apply_id}`,
+      student_card: `${base_uri}/student_card/${apply_id}`,
+      state: true,
+    };
+
+    // update document or create
+    await upsert(payload, { apply_id: apply_id }, Docs)
       .then(() => {
         createdResponse(`${apply_id}`, payload, res);
       })

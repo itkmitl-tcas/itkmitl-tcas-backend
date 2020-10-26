@@ -8,6 +8,7 @@ export class Docs extends Model {
   identity_card: string;
   student_card: string;
   name_change: string;
+  state?: boolean;
   static User: any;
 }
 
@@ -44,6 +45,10 @@ Docs.init(
     name_change: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    state: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {

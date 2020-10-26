@@ -20,6 +20,7 @@ export class User extends Model {
   apply_type?: string;
   permission?: number;
   static Docs: any;
+  step?: number;
 }
 
 User.init(

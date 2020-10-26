@@ -2,6 +2,7 @@ version: '3'
 services:
   database-prod:
     container_name: database-prod
+    restart: always
     image: postgres:13-alpine # use latest official postgres version
     environment:
       POSTGRES_USER: ${POSTGRES_USER} # configure postgres
@@ -18,9 +19,11 @@ services:
       
   backend-prod:
     container_name: backend-prod
+    restart: always
     environment:
       NODE_ENV: production
       APP_PORT: 3000 # container port
+      FRONT_HOST: ${FRONT_HOST}
       POSTGRES_HOST: database-prod # container alias
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -35,9 +38,14 @@ services:
       - ${APP_PORT}:3000 # expose port with prod port
     networks: 
       - application-prod-network
+    volumes:
+    - backend-prod-data:/usr/src/itkmitl-tcas-backend/upload
+
 volumes:
     database-prod-data: # named volumes can be managed easier using docker-compose
-        driver: local
+      driver: local
+    backend-prod-data:
+      driver: local
 networks:
   application-prod-network:
     driver: bridge  

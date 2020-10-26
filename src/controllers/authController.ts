@@ -6,6 +6,7 @@ import { User } from '../modules/users/model';
 import env from '../config/environment';
 import jwt from 'jsonwebtoken';
 import { SignInTDto } from '../modules/users/user.dto';
+import { upsert } from './helper';
 
 export class AuthController {
   /* --------------------------------- Healthy -------------------------------- */
@@ -16,7 +17,17 @@ export class AuthController {
 
   /* --------------------------------- Verify --------------------------------- */
   public async verify(req: IRequestWithUser, res: Response, next: NextFunction) {
-    if (req.user) return successResponse('verify token', true, res);
+    const user = await User.findOne({
+      where: {
+        apply_id: req.user.apply_id,
+      },
+    });
+    const payload = {
+      apply_id: user.apply_id,
+      permission: user.permission,
+      step: user.step,
+    };
+    if (req.user) return successResponse('verify token', payload, res);
     else return mismatchResponse(401, 'verify token', res);
   }
 
@@ -30,6 +41,8 @@ export class AuthController {
       .then((res) => res.data)
       .catch(() => false);
 
+    if (reg_res.pay == '0') return mismatchResponse(406, `${signInParams.apply_id} please pay`, res); // not accept
+
     // validate reg response
     if (!reg_res) return next(failureResponse('REG', null, res));
     if (!reg_res.apply_id) return next(notFoundResponse(`${signInParams.apply_id}`, res));
@@ -38,7 +51,7 @@ export class AuthController {
       reg_res.name !== signInParams.name ||
       reg_res.surname !== signInParams.surname
     )
-      return next(mismatchResponse(401, `${signInParams.apply_id}`, res));
+      return next(mismatchResponse(404, `${signInParams.apply_id}`, res)); // bad request
 
     // define payload for create
     const payload = {
@@ -52,22 +65,16 @@ export class AuthController {
       pay: reg_res.pay == '1' ? true : false,
       prename: reg_res.prename,
       school_name: reg_res.school_name,
+      apply_type: reg_res.type,
     };
     // save to db
-    const result: any = await User.findOrCreate<User>({
-      where: {
-        apply_id: payload.apply_id,
-      },
-      defaults: payload,
-    })
-      .then((result) => result)
-      .catch((err) => {
-        return failureResponse('create user', err, res);
-      });
+    const result: IUser = await upsert(payload, { apply_id: payload.apply_id }, User)
+      .then((result: IUser) => result)
+      .catch((err: Error) => failureResponse('create user', err.message, res));
 
     if (!result) return;
 
-    const user: IUser = result[0];
+    const user: IUser = result;
     const tokenPayload: any = { apply_id: user.apply_id, permission: user.permission };
     const tokenData = await AuthController.createToken(tokenPayload);
     tokenPayload['token'] = tokenData;
@@ -99,7 +106,7 @@ export class AuthController {
 
   /* -------------------------------- Sign Out -------------------------------- */
   public async signOut(request: Request, res: Response) {
-    res.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
+    res.setHeader('Set-Cookie', ['Authorization=; Path=/; Max-age=0']);
     successResponse('Sign out', null, res);
   }
 
@@ -118,6 +125,6 @@ export class AuthController {
   }
 
   static createCookie(tokenData: IToken) {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
+    return `Authorization=${tokenData.token}; HttpOnly; Path=/; Max-Age=${tokenData.expiresIn}`;
   }
 }

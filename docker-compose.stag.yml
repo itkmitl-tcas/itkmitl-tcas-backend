@@ -2,6 +2,7 @@ version: '3'
 services:
   database-stag:
     container_name: database-stag
+    restart: always
     image: postgres:13-alpine # use latest official postgres version
     environment:
       POSTGRES_USER: ${POSTGRES_USER} # configure postgres
@@ -18,10 +19,11 @@ services:
       
   backend-stag:
     container_name: backend-stag
-    restart: on-failure:5
+    restart: always
     environment:
       NODE_ENV: staging
       APP_PORT: 3000 # container port
+      FRONT_HOST: ${FRONT_HOST}
       POSTGRES_HOST: database-stag
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -36,10 +38,14 @@ services:
       - ${APP_PORT}:3000 # expose port with prod port
     networks: 
       - application-stag-network
+    volumes:
+      - backend-stag-data:/usr/src/itkmitl-tcas-backend/upload # persist data even if container shuts down
 
 volumes:
   database-stag-data: # named volumes can be managed easier using docker-compose
-      driver: local
+    driver: local
+  backend-stag-data:
+    driver: local
 networks:
   application-stag-network:
     driver: bridge 

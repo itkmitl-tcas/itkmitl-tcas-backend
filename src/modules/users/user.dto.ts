@@ -1,5 +1,9 @@
 import { IsString, IsEmail, IsDecimal, IsOptional, IsNotEmpty, IsInt, IsNumberString } from 'class-validator';
-
+export class GetUserDto {
+  @IsInt()
+  @IsNotEmpty()
+  public apply_id: number;
+}
 export class CreateUserDto {
   @IsInt()
   @IsNotEmpty()
@@ -67,12 +71,12 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsNotEmpty()
-  @IsNumberString()
+  @IsInt()
   public permission: string;
 
   @IsOptional()
   @IsNotEmpty()
-  @IsNumberString()
+  @IsInt()
   public step: string;
 }
 
