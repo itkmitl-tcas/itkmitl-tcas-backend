@@ -29,6 +29,10 @@ export class UserController {
     const where = auth_permission > 1 ? { apply_id: apply_id } : { apply_id: auth_apply_id };
     User.findOne({
       where: where,
+      attributes: {
+        exclude: ['password'],
+      },
+      include: Docs,
     })
       .then((node) => {
         if (node) successResponse(apply_id, node, res);
