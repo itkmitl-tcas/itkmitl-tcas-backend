@@ -1,3 +1,4 @@
+import Busboy from 'busboy';
 import { Request, Response, NextFunction } from 'express';
 import {
   successResponse,
@@ -58,51 +59,30 @@ export class DocsController {
 
   /* --------------------------------- Create --------------------------------- */
   public async create(req: any, res: Response) {
-    // https://stackoverflow.com/a/35850052
+    // // https://stackoverflow.com/a/35850052
     const apply_id = req.user.apply_id;
-    let test;
-    const storage = await multer.diskStorage({
-      destination: (req, file, cb) => {
-        fs.mkdirSync(`upload/${apply_id}`, { recursive: true });
-        cb(null, `upload/${apply_id}`);
-      },
-      filename: (req, file, cb) => {
-        test = file;
-        cb(null, `${file.fieldname}.pdf`);
-      },
-    });
-    const upload = multer({ storage: storage }).any();
-    await upload(req, res, (err: any) => {
-      if (err) return failureResponse('upload document', err.message, res);
-    });
+    const busboy = new Busboy({ headers: req.headers });
+    const body: Record<string, any> = {};
 
-    const form = new multiparty.Form();
-    await form.parse(req, async (err, fields, files) => {
-      // ! Save to database
-      const docsData = await Docs.findOne({
-        where: {
-          apply_id: apply_id,
-        },
-      });
+    busboy.on('file', (field, file, name, encoding, mime) => {
+      fs.mkdirSync(`upload/${apply_id}`, { recursive: true });
+      const saveTo = `upload/${apply_id}/${field}.pdf`;
+      file.pipe(fs.createWriteStream(saveTo));
       const base_uri = `${env.APP_HOST}:${env.APP_PORT}/docs`;
-      const payload = {
-        apply_id: apply_id,
-        transcript: `${base_uri}/transcript/${apply_id}`,
-        identity_card: `${base_uri}/identity_card/${apply_id}`,
-        student_card: `${base_uri}/student_card/${apply_id}`,
-        name_change: files.name_change || docsData.name_change ? `${base_uri}/name_change/${apply_id}` : null,
-        state: true,
-      };
-      // update document or create
-      await upsert(payload, { apply_id: apply_id }, Docs)
+      body[field] = `${base_uri}/${field}/${apply_id}`;
+    });
+    busboy.on('finish', () => {
+      body['apply_id'] = apply_id;
+      upsert(body, { apply_id: apply_id }, Docs)
         .then(() => {
-          createdResponse(`${apply_id}`, payload, res);
+          createdResponse(`${apply_id}`, body, res);
         })
         .catch((err: { message: any }) => {
           console.log(err);
           insufficientParameters(err.message, res);
         });
     });
+    req.pipe(busboy);
   }
 
   /* ----------------------------------- Get ---------------------------------- */
