@@ -7,6 +7,7 @@ import {
   IsInt,
   IsNumberString,
   IsNotEmptyObject,
+  isString,
 } from 'class-validator';
 
 /* ---------------------------- Create Portfolio ---------------------------- */
@@ -48,7 +49,11 @@ export class CreatePortfolioTypeDto {
 }
 
 export class DeletePortfolioTypeDto {
+  @IsInt()
+  @IsNotEmpty()
+  public port_id: number;
+
   @IsString()
   @IsNotEmpty()
-  public name: string;
+  public field: string;
 }
