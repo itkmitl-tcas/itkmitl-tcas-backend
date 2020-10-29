@@ -183,6 +183,10 @@ export class PortfolioController {
       }
     }
 
+    const apply_id = await Portfolio.findOne({ where: { port_id: port_id } }).then((resp) => {
+      return resp.apply_id;
+    });
+
     // delete portfolio
     await Portfolio.destroy({
       where: {
@@ -191,7 +195,6 @@ export class PortfolioController {
     });
 
     // remove portfolio path
-    const apply_id = await Portfolio.findOne({ where: { port_id: port_id } }).then((resp) => resp.apply_id);
     const path = `upload/${apply_id}/portfolio/${req.body.field}.pdf`;
 
     try {
