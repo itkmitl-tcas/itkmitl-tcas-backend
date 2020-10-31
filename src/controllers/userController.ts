@@ -13,11 +13,35 @@ import {
   mismatchResponse,
 } from '../exceptions/HttpExceptions';
 import { Docs } from '../modules/document/model';
+import Sequelize from 'sequelize';
+import { upsert } from './helper';
+import bcrypt from 'bcrypt';
 
 export class UserController {
   /* -------------------------------- Healthly -------------------------------- */
   public healthy(req: Request, res: Response) {
     successResponse('User api healthy.', null, res);
+  }
+
+  /* ------------------------------- Get Teacher ------------------------------ */
+  public async getTeacher(req: IRequestWithUser, res: Response, next: NextFunction) {
+    const Op = Sequelize.Op;
+    await User.findAll({
+      where: {
+        permission: {
+          [Op.gte]: 2,
+        },
+      },
+      attributes: { exclude: ['password'] },
+    })
+      .then((nodes) => {
+        if (nodes.length) successResponse('Get teacher', nodes, res);
+        else notFoundResponse('get teacher', res);
+      })
+      .catch((err) => {
+        console.log(err);
+        failureResponse('get teacher', err.message, res);
+      });
   }
 
   /* ----------------------------- Get User By ID ----------------------------- */
@@ -63,6 +87,34 @@ export class UserController {
         } catch (err) {
           failureResponse('create user', err, res);
         }
+      });
+  }
+
+  /* ----------------------------- Upsert Teacher ----------------------------- */
+  public async upsertTeacher(req: Request, res: Response) {
+    const payload = req.body;
+    payload['permission'] = 2;
+    await upsert(payload, { email: payload.email }, User)
+      .then((resp: any) => {
+        createdResponse(`${payload.email}`, resp, res);
+      })
+      .catch((err: any) => {
+        insufficientParameters(err.errors[0].message, res);
+      });
+  }
+
+  public async createTeacher(req: Request, res: Response) {
+    const payload = req.body;
+    payload['permission'] = 2; // force modify permission must be 2;
+
+    const salt = await bcrypt.genSalt(10);
+    payload.password = await bcrypt.hash(payload.password, salt);
+    await User.create(payload)
+      .then((resp: any) => {
+        createdResponse(`${payload.email}`, resp, res);
+      })
+      .catch((err: any) => {
+        insufficientParameters(err.errors[0].message, res);
       });
   }
 
