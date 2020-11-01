@@ -7,6 +7,7 @@ import env from '../config/environment';
 import jwt from 'jsonwebtoken';
 import { SignInTDto } from '../modules/users/user.dto';
 import { upsert } from './helper';
+import bcrypt from 'bcrypt';
 
 export class AuthController {
   /* --------------------------------- Healthy -------------------------------- */
@@ -86,21 +87,25 @@ export class AuthController {
   public async signInTeacher(request: Request, res: Response, next: NextFunction) {
     const signInParams: SignInTDto = request.body;
 
-    // save to db
+    // get user
     const user: IUser = await User.findOne({
       where: {
-        apply_id: signInParams.apply_id,
-        password: signInParams.password,
+        email: signInParams.email,
       },
     });
 
-    if (!user) return next(mismatchResponse(401, `${signInParams.apply_id}`, res));
-    if (user.permission < 2) return next(mismatchResponse(401, `${signInParams.apply_id} permission denind`, res));
+    if (!user) return next(mismatchResponse(401, `${signInParams.email}`, res));
+
+    // compare password
+    const check = await bcrypt.compare(signInParams.password, user.password);
+
+    if (!check) return next(mismatchResponse(401, `${signInParams.email}`, res));
+    if (user.permission < 2) return next(mismatchResponse(401, `${signInParams.email} permission denind`, res));
 
     const tokenPayload: any = { apply_id: user.apply_id, permission: user.permission };
     const tokenData = await AuthController.createToken(tokenPayload);
     tokenPayload['token'] = tokenData;
-    // res.setHeader('Set-Cookie', [AuthController.createCookie(tokenData)]);
+    res.setHeader('Set-Cookie', [AuthController.createCookie(tokenData)]);
     successResponse('Sign in', tokenPayload, res);
   }
 

@@ -34,6 +34,7 @@ jobs:
           script: |
             export FRONT_HOST=${{ secrets.STAG_FRONT_HOST }}
             export FRONT_PORT=${{ secrets.STAG_FRONT_PORT }}
+            export APP_HOST=${{ secrets.STAG_APP_HOST }}
             export APP_PORT=${{ secrets.STAG_APP_PORT }}
             export POSTGRES_USER=${{ secrets.STAG_POSTGRES_USER }}
             export POSTGRES_PASSWORD=${{ secrets.STAG_POSTGRES_PASSWORD }}

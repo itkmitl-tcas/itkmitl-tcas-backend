@@ -1,3 +1,4 @@
+import Busboy from 'busboy';
 import { Request, Response, NextFunction } from 'express';
 import {
   successResponse,
@@ -15,6 +16,7 @@ import { upsert } from './helper';
 import multer, { MulterError } from 'multer';
 import fs from 'fs';
 import env from '../config/environment';
+import multiparty from 'multiparty';
 
 export class DocsController {
   /* --------------------------------- Healthy -------------------------------- */
@@ -56,46 +58,30 @@ export class DocsController {
   }
 
   /* --------------------------------- Create --------------------------------- */
-  public async create(req: IRequestWithUser, res: Response) {
-    // https://stackoverflow.com/a/35850052
+  public async create(req: any, res: Response) {
+    // // https://stackoverflow.com/a/35850052
     const apply_id = req.user.apply_id;
-    const storage = multer.diskStorage({
-      destination: (req: IRequestWithUser, file, cb) => {
-        fs.mkdirSync(`upload/${apply_id}`, { recursive: true });
-        cb(null, `upload/${apply_id}`);
-      },
-      filename: (req: IRequestWithUser, file, cb) => {
-        cb(null, `${file.fieldname}.pdf`);
-      },
-    });
-    const upload = multer({ storage: storage }).any();
-    upload(req, res, (err: any) => {
-      if (err) {
-        console.log(err);
-        return res.end('Error uploading file');
-      } else {
-        res.end('File has been uploaded');
-      }
-    });
+    const busboy = new Busboy({ headers: req.headers });
+    const body: Record<string, any> = {};
 
-    // ! Save to database
-    const base_uri = `${env.APP_HOST}:${env.APP_PORT}/docs`;
-    const payload = {
-      apply_id: apply_id,
-      transcript: `${base_uri}/transcript/${apply_id}`,
-      identity_card: `${base_uri}/identity_card/${apply_id}`,
-      student_card: `${base_uri}/student_card/${apply_id}`,
-      state: true,
-    };
-
-    // update document or create
-    await upsert(payload, { apply_id: apply_id }, Docs)
-      .then(() => {
-        createdResponse(`${apply_id}`, payload, res);
-      })
-      .catch((err: { message: any }) => {
-        insufficientParameters(err.message, res);
-      });
+    busboy.on('file', (field, file, name, encoding, mime) => {
+      fs.mkdirSync(`upload/${apply_id}`, { recursive: true });
+      const saveTo = `upload/${apply_id}/${field}.pdf`;
+      file.pipe(fs.createWriteStream(saveTo));
+      const base_uri = `${env.APP_HOST}:${env.APP_PORT}/docs`;
+      body[field] = `${base_uri}/${field}/${apply_id}`;
+    });
+    busboy.on('finish', () => {
+      body['apply_id'] = apply_id;
+      upsert(body, { apply_id: apply_id }, Docs)
+        .then(() => {
+          createdResponse(`${apply_id}`, body, res);
+        })
+        .catch((err: { message: any }) => {
+          insufficientParameters(err.message, res);
+        });
+    });
+    req.pipe(busboy);
   }
 
   /* ----------------------------------- Get ---------------------------------- */

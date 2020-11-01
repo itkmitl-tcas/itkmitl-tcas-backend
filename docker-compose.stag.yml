@@ -22,7 +22,8 @@ services:
     restart: always
     environment:
       NODE_ENV: staging
-      APP_PORT: 3000 # container port
+      APP_HOST: ${APP_HOST}
+      APP_PORT: ${APP_PORT} # container port
       FRONT_HOST: ${FRONT_HOST}
       FRONT_PORT: ${FRONT_PORT}
       POSTGRES_HOST: database-stag
@@ -36,7 +37,7 @@ services:
     depends_on:
       - database-stag
     ports: 
-      - ${APP_PORT}:3000 # expose port with prod port
+      - ${APP_PORT}:${APP_PORT} # expose port with prod port
     networks: 
       - application-stag-network
     volumes:
