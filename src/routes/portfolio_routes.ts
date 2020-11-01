@@ -37,8 +37,10 @@ export class PortfolioRoutes {
         AuthMiddleware(2),
         ValidationMiddleware(CreatePortfolioTypeDto, false),
         this.portfolio_type_controller.create,
-      )
-      .delete(
+      );
+    app
+      .route('/portfoliotype/delete')
+      .post(
         AuthMiddleware(2),
         ValidationMiddleware(DeletePortfolioTypeDto, false),
         this.portfolio_type_controller.delete,

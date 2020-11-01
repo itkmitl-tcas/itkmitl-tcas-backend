@@ -212,8 +212,9 @@ export class PortfolioTypeController {
     successResponse('Portfolio types api healthy.', null, res);
   }
   /* ----------------------------------- Get ---------------------------------- */
-  public getAll(req: Request, res: Response): void {
-    PortfolioType.findAll({ attributes: { exclude: ['score', 'createdAt', 'updatedAt'] } })
+  public getAll(req: IRequestWithUser, res: Response): void {
+    const permission = req.user.permission;
+    PortfolioType.findAll({ attributes: { exclude: [permission >= 2 ? '' : 'score', 'createdAt', 'updatedAt'] } })
       .then((nodes: IPortfolio[]) => {
         successResponse('Get portfolio types', nodes, res);
       })

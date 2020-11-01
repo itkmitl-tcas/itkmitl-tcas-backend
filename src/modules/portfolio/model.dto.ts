@@ -51,9 +51,5 @@ export class CreatePortfolioTypeDto {
 export class DeletePortfolioTypeDto {
   @IsInt()
   @IsNotEmpty()
-  public port_id: number;
-
-  @IsString()
-  @IsNotEmpty()
-  public field: string;
+  public type_id: number;
 }
