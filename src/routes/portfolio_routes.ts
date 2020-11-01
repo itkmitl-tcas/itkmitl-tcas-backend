@@ -21,12 +21,7 @@ export class PortfolioRoutes {
     // create
     app.route('/portfolio').post(AuthMiddleware(1), this.portfolio_controller.create);
     // delete
-    app.post(
-      '/portfolio/delete',
-      AuthMiddleware(1),
-      ValidationMiddleware(DeletePortfolioTypeDto, false),
-      this.portfolio_controller.delete,
-    );
+    app.post('/portfolio/delete', AuthMiddleware(1), this.portfolio_controller.delete);
 
     /* ----------------------------- Portfolio Types ---------------------------- */
     app.route('/portfoliotype/healthy').get(AuthMiddleware(1), this.portfolio_type_controller.healthy);
