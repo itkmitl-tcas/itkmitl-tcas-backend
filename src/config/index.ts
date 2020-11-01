@@ -21,9 +21,9 @@ class App {
     this.app = express();
     this.config();
     if (process.env.NODE_ENV == 'production') {
-      this.app.use(cors({ origin: `${env.FRONT_HOST}:${env.FRONT_PORT}`, credentials: true }));
-    } else {
       this.app.use(cors({ origin: `${env.FRONT_HOST}`, credentials: true }));
+    } else {
+      this.app.use(cors({ origin: `${env.FRONT_HOST}:${env.FRONT_PORT}`, credentials: true }));
     }
     this.healthy_routes.route(this.app);
     this.user_routes.route(this.app);
