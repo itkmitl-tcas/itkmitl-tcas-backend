@@ -49,7 +49,6 @@ export class PortfolioController {
     }
 
     const path = `upload/${target_id}/portfolio/${type}.pdf`;
-    console.log(path);
 
     try {
       const file = fs.readFileSync(path);
