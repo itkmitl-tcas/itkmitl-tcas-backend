@@ -93,7 +93,7 @@ export class SignInDto {
 
 export class SignInTDto {
   @IsString()
-  public apply_id: number;
+  public email: string;
 
   @IsString()
   public password: string;

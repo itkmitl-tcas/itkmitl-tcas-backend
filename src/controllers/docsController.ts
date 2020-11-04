@@ -78,7 +78,6 @@ export class DocsController {
           createdResponse(`${apply_id}`, body, res);
         })
         .catch((err: { message: any }) => {
-          console.log(err);
           insufficientParameters(err.message, res);
         });
     });

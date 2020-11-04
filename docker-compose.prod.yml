@@ -42,6 +42,8 @@ services:
       - application-prod-network
     volumes:
     - backend-prod-data:/usr/src/itkmitl-tcas-backend/upload
+    - /etc/letsencrypt/live/tcas.it.kmitl.ac.th/fullchain.pem:/etc/nginx/ssl/fullchain.pem
+    - /etc/letsencrypt/live/tcas.it.kmitl.ac.th/privkey.pem:/etc/nginx/ssl/privkey.pem
 
 volumes:
     database-prod-data: # named volumes can be managed easier using docker-compose

@@ -17,6 +17,11 @@ export class UserRoutes {
     app.route('/user').post(AuthMiddleware(3), ValidationMiddleware(CreateUserDto, false), this.user_controller.create);
     app.route('/user').patch(AuthMiddleware(1), ValidationMiddleware(CreateUserDto, true), this.user_controller.update);
     app.route('/user').delete(AuthMiddleware(3), this.user_controller.delete);
+
+    app.route('/user/teacher').get(AuthMiddleware(2), this.user_controller.getTeacher);
+    app
+      .route('/user/teacher')
+      .post(AuthMiddleware(2), ValidationMiddleware(CreateUserDto, false), this.user_controller.createTeacher);
   }
 }
 

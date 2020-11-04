@@ -4,6 +4,7 @@ import env from '../config/environment';
 import { Request, Response, NextFunction } from 'express';
 import { IPortfolioType, IPortfolio } from '../modules/portfolio/model';
 import { Portfolio, PortfolioType } from '../modules/portfolio/model';
+import { User } from '../modules/users/model';
 import { IRequestWithUser } from '../modules/users/interface';
 import { CreatePortfolioDto } from '../modules/portfolio/model.dto';
 import { upsert } from './helper';
@@ -29,6 +30,37 @@ export class PortfolioController {
     successResponse('get all portfolio', null, res);
   }
 
+  /* ---------------------------------- View ---------------------------------- */
+  public async view(req: IRequestWithUser, res: Response) {
+    // https://stackoverflow.com/q/11598274/10483617
+
+    let target_id: number;
+    const user_id = req.user.apply_id;
+    const user_permission = req.user.permission;
+    const params_id = req.params.apply_id;
+    const type = req.params.type;
+
+    if (!params_id) {
+      target_id = user_id;
+    } else if (user_permission >= 2 || user_id == parseInt(params_id)) {
+      target_id = +params_id;
+    } else {
+      notFoundResponse(`${type}`, res);
+    }
+
+    const path = `upload/${target_id}/portfolio/${type}.pdf`;
+
+    try {
+      const file = fs.readFileSync(path);
+      const stat = fs.statSync(path);
+      res.setHeader('Content-Length', stat.size);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `inline; filename=${type}`);
+      res.send(file);
+    } catch (err) {
+      notFoundResponse(`${type}`, res);
+    }
+  }
   /* ----------------------------------- Get ---------------------------------- */
   public get(req: IRequestWithUser, res: Response) {
     const permission = req.user.permission;
@@ -79,7 +111,7 @@ export class PortfolioController {
       } else {
         fs.mkdirSync(`upload/${apply_id}/portfolio`, { recursive: true });
         const saveTo = `upload/${apply_id}/portfolio/${field}.pdf`;
-        const base_uri = `${env.APP_HOST}:${env.APP_PORT}/portfolio`;
+        const base_uri = `${env.APP_HOST}:${env.APP_PORT}/portfolio/view`;
         body['file'] = `${base_uri}/${field}/${apply_id}`;
         file.pipe(fs.createWriteStream(saveTo));
       }
@@ -88,7 +120,6 @@ export class PortfolioController {
       body[field] = val;
     });
     busboy.on('finish', async () => {
-      console.log(body);
       await validate(plainToClass(CreatePortfolioDto, body), { skipMissingProperties: false }).then(
         (errors: ValidationError[]) => {
           if (errors.length > 0) {
@@ -100,15 +131,77 @@ export class PortfolioController {
       if (!body.file) errorStack.push('file should not be empty');
       if (errorStack.length) return insufficientParameters(errorStack, res);
       body['apply_id'] = apply_id;
-      upsert(body, { port_id: body.port_id || null }, Portfolio)
-        .then(() => {
-          createdResponse(`${apply_id}`, body, res);
+      await upsert(body, { port_id: body.port_id || null }, Portfolio)
+        .then((resp: any) => {
+          User.update(
+            {
+              step: 4,
+            },
+            {
+              where: {
+                apply_id: apply_id,
+              },
+            },
+          )
+            .then(() => {
+              createdResponse(`${apply_id}`, resp, res);
+            })
+            .catch((err: { message: any }) => {
+              insufficientParameters(err.message, res);
+            });
         })
         .catch((err: { message: any }) => {
           insufficientParameters(err.message, res);
         });
     });
     req.pipe(busboy);
+  }
+
+  /* --------------------------------- Delete --------------------------------- */
+
+  public async delete(req: IRequestWithUser, res: Response) {
+    // permisison 1 can remove own data
+    // permission 2 can remove every data
+
+    const user_permission = req.user.permission;
+    const user_id = req.user.apply_id;
+    let port_id: number | null = null;
+
+    // check current user port_id
+    let user_port: any = await Portfolio.findAll({ where: { apply_id: user_id } });
+    user_port = user_port.map((i: any) => i.port_id);
+
+    // validate permission
+    if (user_permission >= 2) {
+      port_id = req.body.port_id;
+    } else {
+      if (user_port.includes(+req.body.port_id)) {
+        port_id = +req.body.port_id;
+      } else {
+        return notFoundResponse(`port_id ${req.body.port_id}`, res);
+      }
+    }
+
+    const apply_id = await Portfolio.findOne({ where: { port_id: port_id } }).then((resp) => {
+      return resp.apply_id;
+    });
+
+    // delete portfolio
+    await Portfolio.destroy({
+      where: {
+        port_id: port_id,
+      },
+    });
+
+    // remove portfolio path
+    const path = `upload/${apply_id}/portfolio/${req.body.field}.pdf`;
+
+    try {
+      fs.unlinkSync(path);
+      deletedResponse(`portfolio ${port_id}`, null, res);
+    } catch (err) {
+      failureResponse('remove portfolio file', err.message, res);
+    }
   }
 }
 
@@ -118,8 +211,9 @@ export class PortfolioTypeController {
     successResponse('Portfolio types api healthy.', null, res);
   }
   /* ----------------------------------- Get ---------------------------------- */
-  public getAll(req: Request, res: Response): void {
-    PortfolioType.findAll({ attributes: { exclude: ['score', 'createdAt', 'updatedAt'] } })
+  public getAll(req: IRequestWithUser, res: Response): void {
+    const permission = req.user.permission;
+    PortfolioType.findAll({ attributes: { exclude: [permission >= 2 ? '' : 'score', 'createdAt', 'updatedAt'] } })
       .then((nodes: IPortfolio[]) => {
         successResponse('Get portfolio types', nodes, res);
       })
