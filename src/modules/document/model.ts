@@ -46,6 +46,10 @@ Docs.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    full_portfolio: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     state: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
