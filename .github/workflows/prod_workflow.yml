@@ -44,6 +44,9 @@ jobs:
             docker-compose -f docker-compose.prod.yml down --rmi local
             docker-compose -f docker-compose.prod.yml up -d --build --no-deps --force-recreate
 
+  release:
+    runs-on: ubuntu-16.04
+    steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Semantic Release
@@ -56,6 +59,7 @@ jobs:
             @semantic-release/git@7.0.18
             @semantic-release/exec@3.3.8
             @semantic-release/changelog@3.0.0
+
       
                   
       
