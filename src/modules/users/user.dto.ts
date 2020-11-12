@@ -30,37 +30,30 @@ export class CreateUserDto {
   public mobile: string;
 
   @IsOptional()
-  @IsNotEmpty()
   @IsString()
   public school_name: string;
 
   @IsOptional()
-  @IsNotEmpty()
   @IsDecimal()
   public gpax: number;
 
   @IsOptional()
-  @IsNotEmpty()
   @IsDecimal()
   public gpax_match: number;
 
   @IsOptional()
-  @IsNotEmpty()
   @IsDecimal()
   public gpax_eng: number;
 
   @IsOptional()
-  @IsNotEmpty()
   @IsDecimal()
   public gpax_com: number;
 
   @IsOptional()
-  @IsNotEmpty()
   @IsDecimal()
   public credit_total: number;
 
   @IsOptional()
-  @IsNotEmpty()
   @IsString()
   public study_field: string;
 
