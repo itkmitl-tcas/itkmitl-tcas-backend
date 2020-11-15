@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { fn, col } from 'sequelize';
 import { User } from '../modules/users/model';
 import { IUser } from '../modules/users/interface';
 import { IRequestWithUser } from '../modules/users/interface';
@@ -13,6 +14,8 @@ import {
   mismatchResponse,
 } from '../exceptions/HttpExceptions';
 import { Docs } from '../modules/document/model';
+import { Portfolio, PortfolioType } from '../modules/portfolio/model';
+import url from 'url';
 import Sequelize from 'sequelize';
 import { upsert } from './helper';
 import bcrypt from 'bcrypt';
@@ -39,8 +42,56 @@ export class UserController {
         else notFoundResponse('get teacher', res);
       })
       .catch((err) => {
-        console.log(err);
         failureResponse('get teacher', err.message, res);
+      });
+  }
+  /* ------------------------------- Get Teacher ------------------------------ */
+  public async getStudent(req: IRequestWithUser, res: Response, next: NextFunction) {
+    const Op = Sequelize.Op;
+    const query = url.parse(req.url, true);
+
+    const year = query.query.year
+      ? Sequelize.where(Sequelize.cast(Sequelize.col('user.createdAt'), 'varchar'), {
+          [Op.iLike]: `%${query.query.year}%`,
+        })
+      : null;
+    const step = query.query.step ? { step: +query.query.step } : null;
+    await User.findAll({
+      where: {
+        [Op.and]: [
+          { permission: 1 },
+          {
+            [Op.or]: [
+              Sequelize.where(Sequelize.cast(Sequelize.col('user.apply_id'), 'varchar'), {
+                [Op.iLike]: `%${query.query.search}%`,
+              }),
+              {
+                name: {
+                  [Op.like]: `%${query.query.search}%`,
+                },
+              },
+              {
+                surname: {
+                  [Op.like]: `%${query.query.search}%`,
+                },
+              },
+            ],
+          },
+          year,
+          step,
+        ],
+      },
+      attributes: {
+        exclude: ['password'],
+      },
+    })
+      .then((nodes) => {
+        if (nodes.length) successResponse('Get student', nodes, res);
+        else notFoundResponse('student', res);
+      })
+      .catch((err) => {
+        console.log(err);
+        failureResponse('teacher', err.message, res);
       });
   }
 
@@ -56,13 +107,20 @@ export class UserController {
       attributes: {
         exclude: ['password'],
       },
-      include: Docs,
+      include: [
+        Docs,
+        {
+          model: Portfolio,
+          include: [PortfolioType],
+        },
+      ],
     })
       .then((node) => {
         if (node) successResponse(apply_id, node, res);
         else next(notFoundResponse(apply_id, res));
       })
       .catch((err) => {
+        console.log(err);
         failureResponse('get user', err, res);
       });
   }

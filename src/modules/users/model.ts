@@ -1,6 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import { database } from '../../config/database';
 import { Docs } from '../document/model';
+import { Portfolio, PortfolioType } from '../portfolio/model';
 
 export class User extends Model {
   apply_id: number;
@@ -128,4 +129,13 @@ Docs.belongsTo(User, {
   foreignKey: 'apply_id',
 });
 
+Portfolio.hasOne(PortfolioType, {
+  sourceKey: 'type_id',
+  foreignKey: 'type_id',
+});
+
+User.hasMany(Portfolio, {
+  sourceKey: 'apply_id',
+  foreignKey: 'apply_id',
+});
 User.sync({ alter: true });
