@@ -33,7 +33,7 @@ export interface IUserSignIn {
   gpax_match: string;
   gpax_eng: string;
   gpax_com: string;
-  credit_total: string;
+  credit_total?: string;
   study_field: string;
   password: string;
   type: string;
