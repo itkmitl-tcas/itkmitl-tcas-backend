@@ -200,7 +200,7 @@ export class PortfolioController {
       fs.unlinkSync(path);
       deletedResponse(`portfolio ${port_id}`, null, res);
     } catch (err) {
-      failureResponse('remove portfolio file', err.message, res);
+      failureResponse('remove portfolio file \n' + err.message, err.message, res);
     }
   }
 }
@@ -218,19 +218,20 @@ export class PortfolioTypeController {
         successResponse('Get portfolio types', nodes, res);
       })
       .catch((err: Error) => {
-        failureResponse('get portfolio types', err.message, res);
+        failureResponse('get portfolio types \n' + err.message, err.message, res);
       });
   }
 
   /* ---------------------------- Create or Update ---------------------------- */
   public create(req: Request, res: Response): void {
     const bodyData: IPortfolioType = req.body;
+
     upsert(bodyData, { name: bodyData.name }, PortfolioType)
       .then((node: IPortfolioType) => {
         createdResponse(`${bodyData.name}`, node, res);
       })
       .catch((err: Error) => {
-        failureResponse('create portfolio type', err.message, res);
+        failureResponse('create portfolio type \n' + err.message, err.message, res);
       });
   }
 
@@ -246,7 +247,7 @@ export class PortfolioTypeController {
         deletedResponse(`${bodyData.name}`, node, res);
       })
       .catch((err: Error) => {
-        failureResponse('create portfolio type', err.message, res);
+        failureResponse('create portfolio type' + err.message, err.message, res);
       });
   }
 }
