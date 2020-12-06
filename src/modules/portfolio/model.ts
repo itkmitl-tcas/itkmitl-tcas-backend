@@ -53,7 +53,7 @@ Portfolio.init(
       allowNull: false,
     },
     desc: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     file: {
