@@ -132,23 +132,28 @@ export class PortfolioController {
       if (errorStack.length) return insufficientParameters(errorStack, res);
       body['apply_id'] = apply_id;
       await upsert(body, { port_id: body.port_id || null }, Portfolio)
-        .then((resp: any) => {
-          User.update(
-            {
-              step: 4,
-            },
-            {
-              where: {
-                apply_id: apply_id,
+        .then(async (resp: any) => {
+          const user_data = await User.findOne({ attributes: ['step'], where: { apply_id: apply_id } });
+          if (user_data.step !== 4) {
+            User.update(
+              {
+                step: 4,
               },
-            },
-          )
-            .then(() => {
-              createdResponse(`${apply_id}`, resp, res);
-            })
-            .catch((err: { message: any }) => {
-              insufficientParameters(err.message, res);
-            });
+              {
+                where: {
+                  apply_id: apply_id,
+                },
+              },
+            )
+              .then(() => {
+                createdResponse(`${apply_id}`, resp, res);
+              })
+              .catch((err: { message: any }) => {
+                insufficientParameters(err.message, res);
+              });
+          } else {
+            createdResponse(`${apply_id}`, body, res);
+          }
         })
         .catch((err: { message: any }) => {
           insufficientParameters(err.message, res);

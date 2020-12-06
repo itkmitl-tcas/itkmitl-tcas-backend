@@ -74,8 +74,28 @@ export class DocsController {
     busboy.on('finish', () => {
       body['apply_id'] = apply_id;
       upsert(body, { apply_id: apply_id }, Docs)
-        .then(() => {
-          createdResponse(`${apply_id}`, body, res);
+        .then(async () => {
+          const user_data = await User.findOne({ attributes: ['step'], where: { apply_id: apply_id } });
+          if (user_data.step !== 4) {
+            User.update(
+              {
+                step: 3,
+              },
+              {
+                where: {
+                  apply_id: apply_id,
+                },
+              },
+            )
+              .then(() => {
+                createdResponse(`${apply_id}`, body, res);
+              })
+              .catch((err: { message: any }) => {
+                insufficientParameters(err.message, res);
+              });
+          } else {
+            createdResponse(`${apply_id}`, body, res);
+          }
         })
         .catch((err: { message: any }) => {
           insufficientParameters(err.message, res);
