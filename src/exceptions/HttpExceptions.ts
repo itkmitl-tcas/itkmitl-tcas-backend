@@ -52,7 +52,7 @@ export function failureResponse(message: string, DATA: any, res: Response) {
 export function insufficientParameters(DATA: any, res: Response) {
   res.status(400).json({
     STATUS: 'BAD REQUEST',
-    MESSAGE: 'Insufficient parameters',
+    MESSAGE: `Insufficient parameters \n ${DATA}`,
     DATA: DATA,
   });
 }
