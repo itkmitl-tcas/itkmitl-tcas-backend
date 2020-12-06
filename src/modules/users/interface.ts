@@ -18,6 +18,7 @@ export interface IUser {
   apply_type?: string;
   permission?: number;
   password?: string;
+  step?: number;
 }
 
 export interface IUserSignIn {
@@ -37,16 +38,19 @@ export interface IUserSignIn {
   study_field: string;
   password: string;
   type: string;
+  step?: number;
 }
 
 export interface IToken {
   token: string;
   expiresIn: number;
+  step?: number;
 }
 
 export interface ITokenData {
   apply_id: number;
   permission: number;
+  step?: number;
 }
 
 export interface IRequestWithUser extends Request {

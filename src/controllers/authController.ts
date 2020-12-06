@@ -76,7 +76,7 @@ export class AuthController {
     if (!result) return;
 
     const user: IUser = result;
-    const tokenPayload: any = { apply_id: user.apply_id, permission: user.permission };
+    const tokenPayload: any = { apply_id: user.apply_id, permission: user.permission, step: user.step };
     const tokenData = await AuthController.createToken(tokenPayload);
     tokenPayload['token'] = tokenData;
     res.setHeader('Set-Cookie', [AuthController.createCookie(tokenData)]);
@@ -102,7 +102,7 @@ export class AuthController {
     if (!check) return next(mismatchResponse(401, `${signInParams.email}`, res));
     if (user.permission < 2) return next(mismatchResponse(401, `${signInParams.email} permission denind`, res));
 
-    const tokenPayload: any = { apply_id: user.apply_id, permission: user.permission };
+    const tokenPayload: any = { apply_id: user.apply_id, permission: user.permission, step: user.step };
     const tokenData = await AuthController.createToken(tokenPayload);
     tokenPayload['token'] = tokenData;
     res.setHeader('Set-Cookie', [AuthController.createCookie(tokenData)]);
@@ -122,6 +122,7 @@ export class AuthController {
     const dataStoredInToken: ITokenData = {
       apply_id: user.apply_id,
       permission: user.permission,
+      step: user.step,
     };
     return {
       expiresIn,
