@@ -63,8 +63,8 @@
     "tsconfig-paths": "^3.9.0"
   },
   "dependencies": {
-    "@sentry/node": "^5.27.0",
-    "@sentry/tracing": "^5.27.0",
+    "@sentry/node": "^5.29.2",
+    "@sentry/tracing": "^5.29.2",
     "@types/async": "^3.2.3",
     "@types/bcrypt": "^3.0.0",
     "@types/busboy": "^0.2.3",

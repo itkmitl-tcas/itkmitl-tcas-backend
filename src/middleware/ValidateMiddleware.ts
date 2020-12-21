@@ -5,6 +5,7 @@ import { validate, ValidationError } from 'class-validator';
 import { insufficientParameters } from '../exceptions/HttpExceptions';
 import * as express from 'express';
 import Busboy from 'busboy';
+import * as Sentry from '@sentry/node';
 
 function ValidateMiddleware<T>(type: any, skipMissingProperties = false): express.RequestHandler {
   return async (req, res, next) => {
@@ -12,6 +13,7 @@ function ValidateMiddleware<T>(type: any, skipMissingProperties = false): expres
     // if (header == 'application/json') {
     validate(plainToClass(type, req.body), { skipMissingProperties }).then((errors: ValidationError[]) => {
       if (errors.length > 0) {
+        Sentry.captureException(errors);
         const message = errors.map((error: ValidationError) => Object.values(error.constraints)[0]);
         insufficientParameters(message, res);
       } else {
