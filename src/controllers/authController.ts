@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken';
 import { SignInTDto } from '../modules/users/user.dto';
 import { upsert } from './helper';
 import bcrypt from 'bcrypt';
+import * as Sentry from '@sentry/node';
 
 export class AuthController {
   /* --------------------------------- Healthy -------------------------------- */
@@ -40,7 +41,10 @@ export class AuthController {
     const reg_res: IUserSignIn = await axios
       .get(`https://reg.kmitl.ac.th/TCAS/service_IT/users/${signInParams.apply_id}`)
       .then((res) => res.data)
-      .catch(() => false);
+      .catch((err) => {
+        Sentry.captureException(err);
+        return false;
+      });
 
     if (reg_res.pay == '0') return mismatchResponse(406, `${signInParams.apply_id} please pay`, res); // not accept
 
@@ -71,7 +75,10 @@ export class AuthController {
     // save to db
     const result: IUser = await upsert(payload, { apply_id: payload.apply_id }, User)
       .then((result: IUser) => result)
-      .catch((err: Error) => failureResponse('create user', err.message, res));
+      .catch((err: Error) => {
+        Sentry.captureException(err);
+        return failureResponse('create user', err.message, res);
+      });
 
     if (!result) return;
 

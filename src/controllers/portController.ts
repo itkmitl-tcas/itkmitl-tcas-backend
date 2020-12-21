@@ -10,6 +10,7 @@ import { CreatePortfolioDto } from '../modules/portfolio/model.dto';
 import { upsert } from './helper';
 import { validate, ValidationError } from 'class-validator';
 import { plainToClass } from 'class-transformer';
+import * as Sentry from '@sentry/node';
 import {
   successResponse,
   createdResponse,
@@ -125,6 +126,7 @@ export class PortfolioController {
           if (errors.length > 0) {
             const message = errors.map((error: ValidationError) => Object.values(error.constraints)[0]);
             errorStack = errorStack.concat(message);
+            Sentry.captureException(errorStack);
           }
         },
       );
@@ -149,6 +151,7 @@ export class PortfolioController {
                 createdResponse(`${apply_id}`, resp, res);
               })
               .catch((err: { message: any }) => {
+                Sentry.captureException(err);
                 insufficientParameters(err.message, res);
               });
           } else {
@@ -156,6 +159,7 @@ export class PortfolioController {
           }
         })
         .catch((err: { message: any }) => {
+          Sentry.captureException(err);
           insufficientParameters(err.message, res);
         });
     });

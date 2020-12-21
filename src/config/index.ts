@@ -8,6 +8,9 @@ import { PortfolioRoutes } from '../routes//portfolio_routes';
 import { CommonRoutes } from '../routes/common_routes';
 import env from './environment';
 
+import * as Sentry from '@sentry/node';
+import * as Tracing from '@sentry/tracing';
+
 class App {
   public app: express.Application;
   private user_routes: UserRoutes = new UserRoutes();
@@ -25,6 +28,24 @@ class App {
     } else {
       this.app.use(cors({ origin: `${env.FRONT_HOST}:${env.FRONT_PORT}`, credentials: true }));
     }
+
+    Sentry.init({
+      dsn: 'https://700449d2e66c4d74a2a4c58837d546a5@o465173.ingest.sentry.io/5565637',
+      environment: process.env.NODE_ENV || 'development',
+      integrations: [
+        // enable HTTP calls tracing
+        new Sentry.Integrations.Http({ tracing: true }),
+      ],
+
+      // We recommend adjusting this value in production, or using tracesSampler
+      // for finer control
+      tracesSampleRate: 1,
+    });
+
+    this.app.use(Sentry.Handlers.requestHandler());
+    // TracingHandler creates a trace for every incoming request
+    this.app.use(Sentry.Handlers.tracingHandler());
+
     this.healthy_routes.route(this.app);
     this.user_routes.route(this.app);
     this.auth_routes.route(this.app);

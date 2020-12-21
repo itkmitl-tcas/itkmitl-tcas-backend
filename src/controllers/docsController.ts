@@ -17,6 +17,7 @@ import multer, { MulterError } from 'multer';
 import fs from 'fs';
 import env from '../config/environment';
 import multiparty from 'multiparty';
+import * as Sentry from '@sentry/node';
 
 export class DocsController {
   /* --------------------------------- Healthy -------------------------------- */
@@ -98,6 +99,7 @@ export class DocsController {
           }
         })
         .catch((err: { message: any }) => {
+          Sentry.captureException(err);
           insufficientParameters(err.message, res);
         });
     });

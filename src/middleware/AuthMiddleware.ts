@@ -4,6 +4,7 @@ import env from '../config/environment';
 import { IRequestWithUser, ITokenData, IUser } from '../modules/users/interface';
 import { mismatchResponse } from '../exceptions/HttpExceptions';
 import { User } from '../modules/users/model';
+import * as Sentry from '@sentry/node';
 
 export default function AuthMiddleware<T>(permission = 1): RequestHandler {
   return async (request: IRequestWithUser, res: Response, next: NextFunction) => {
@@ -23,6 +24,7 @@ export default function AuthMiddleware<T>(permission = 1): RequestHandler {
             mismatchResponse(401, `credentials permission denied (${user.permission}|${permission})`, res);
           } else {
             request.user = verificationResponse;
+            Sentry.setUser({ apply_id: verificationResponse.apply_id });
             next();
           }
         } else {
