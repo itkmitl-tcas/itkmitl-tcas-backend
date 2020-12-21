@@ -44,7 +44,7 @@ export function notFoundResponse(message: string, res: Response) {
 export function failureResponse(message: string, DATA: any, res: Response) {
   res.status(500).json({
     STATUS: 'FAILURE',
-    MESSAGE: `Something went wrong with ${message}`,
+    MESSAGE: `Something went wrong with \n ${DATA}`,
     DATA,
   });
 }
