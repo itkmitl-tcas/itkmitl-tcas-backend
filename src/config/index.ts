@@ -31,6 +31,7 @@ class App {
 
     Sentry.init({
       dsn: 'https://700449d2e66c4d74a2a4c58837d546a5@o465173.ingest.sentry.io/5565637',
+      environment: process.env.NODE_ENV || 'development',
       integrations: [
         // enable HTTP calls tracing
         new Sentry.Integrations.Http({ tracing: true }),
