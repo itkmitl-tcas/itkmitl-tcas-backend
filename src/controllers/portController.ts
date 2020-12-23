@@ -83,9 +83,21 @@ export class PortfolioController {
     Portfolio.findAll({
       where: { apply_id: apply_id },
       include: PortfolioType,
+      raw: true,
+      nest: true,
     })
-      .then((nodes: IPortfolio[]) => {
-        if (nodes.length) successResponse('Get portfolio types', nodes, res);
+      .then(async (nodes: IPortfolio[]) => {
+        const customSort = function (a: any, b: any) {
+          return Number(a.order.match(/(\d+)/g)[0]) - Number(b.order.match(/(\d+)/g)[0]);
+        };
+
+        for (const i in nodes) {
+          const item = nodes[i].file.split('/')[5];
+          nodes[i].order = item;
+        }
+
+        const nodes_sort = nodes.sort(customSort);
+        if (nodes.length) successResponse('Get portfolio types', nodes_sort, res);
         else notFoundResponse(`portfolio ${apply_id}`, res);
       })
       .catch((err: Error) => {
