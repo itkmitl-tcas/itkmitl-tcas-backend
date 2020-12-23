@@ -16,6 +16,7 @@ export class Portfolio extends Model {
   name?: string;
   desc?: string;
   file?: string;
+  order?: string;
 }
 
 /* -------------------------------- Interface ------------------------------- */
