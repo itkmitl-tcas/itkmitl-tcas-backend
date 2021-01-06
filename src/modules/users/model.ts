@@ -2,6 +2,7 @@ import { Model, DataTypes } from 'sequelize';
 import { database } from '../../config/database';
 import { Docs } from '../document/model';
 import { Portfolio, PortfolioType } from '../portfolio/model';
+import { Assessment } from '../assessment';
 
 export class User extends Model {
   apply_id: number;
@@ -137,5 +138,10 @@ Portfolio.hasOne(PortfolioType, {
 User.hasMany(Portfolio, {
   sourceKey: 'apply_id',
   foreignKey: 'apply_id',
+});
+
+User.hasMany(Assessment, {
+  sourceKey: 'apply_id',
+  foreignKey: 'assessor_id',
 });
 User.sync({ alter: true });
