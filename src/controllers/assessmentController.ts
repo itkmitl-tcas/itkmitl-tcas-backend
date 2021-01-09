@@ -41,7 +41,7 @@ export class AssessmentController {
     // get assessee id
     let assessee: any = await Assessment.findAll({
       where: {
-        [Op.and]: [{ assessor_id: assessor_id }, { score: { [Op.eq]: null } }],
+        [Op.and]: [{ assessor_id: assessor_id }],
       },
       raw: true,
     });
