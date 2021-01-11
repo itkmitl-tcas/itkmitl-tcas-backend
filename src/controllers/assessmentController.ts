@@ -40,6 +40,7 @@ export class AssessmentController {
 
     // get assessee id
     let assessee: any = await Assessment.findAll({
+      order: [['id', 'DESC']],
       where: {
         [Op.and]: [{ assessor_id: assessor_id }],
       },
@@ -49,6 +50,7 @@ export class AssessmentController {
 
     // get assessee data
     const users = await User.findAll({
+      order: [['createdAt', 'DESC']],
       where: {
         apply_id: {
           [Op.in]: assessee,

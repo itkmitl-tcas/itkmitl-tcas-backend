@@ -124,7 +124,7 @@ export class AuthController {
 
   /* ----------------------------------- JWT ---------------------------------- */
   static createToken(user: ITokenData): any {
-    const expiresIn = 60 * 60; // an hour
+    const expiresIn = 60 * 720; // an hour
     const secret = env.JWT_SECRET;
     const dataStoredInToken: ITokenData = {
       apply_id: user.apply_id,
