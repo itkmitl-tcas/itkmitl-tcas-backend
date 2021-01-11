@@ -98,6 +98,9 @@ export class AssessmentController {
           {
             permission: { [Op.lt]: 2 },
           },
+          {
+            step: 4,
+          },
         ],
       },
       attributes: {
