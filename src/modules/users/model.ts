@@ -142,6 +142,6 @@ User.hasMany(Portfolio, {
 
 User.hasMany(Assessment, {
   sourceKey: 'apply_id',
-  foreignKey: 'assessor_id',
+  foreignKey: 'assessee_id',
 });
 User.sync({ alter: true });

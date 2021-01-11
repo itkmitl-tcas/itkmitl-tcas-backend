@@ -1,6 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import { database } from '../../config/database';
 import Sequelize from 'sequelize';
+import { User } from '../users/model';
 
 export class Assessment extends Model {
   id: number;

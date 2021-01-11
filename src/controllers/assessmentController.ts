@@ -58,6 +58,7 @@ export class AssessmentController {
         exclude: ['password'],
       },
       include: [
+        Assessment,
         {
           model: Portfolio,
           include: [PortfolioType],
@@ -88,7 +89,14 @@ export class AssessmentController {
     const users = await User.findAll({
       limit: amount,
       where: {
-        apply_id: { [Op.notIn]: assessments },
+        [Op.and]: [
+          {
+            apply_id: { [Op.notIn]: assessments },
+          },
+          {
+            permission: { [Op.lt]: 2 },
+          },
+        ],
       },
       attributes: {
         exclude: ['password'],
