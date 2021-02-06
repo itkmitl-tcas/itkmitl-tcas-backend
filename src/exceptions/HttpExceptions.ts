@@ -26,26 +26,26 @@ export function updatedResponse(message: string, DATA: any, res: Response) {
   // res.end();
 }
 
-export function deletedResponse(message: string, DATA: any, res: Response) {
-  res.status(200).json({
+export function deletedResponse(message: string, DATA: any, res: Response, status = 200) {
+  res.status(status).json({
     STATUS: 'DELETED',
     MESSAGE: `Resource ${message} was successfully deleted`,
     DATA,
   });
 }
 
-export function notFoundResponse(message: string, res: Response) {
-  res.status(404).json({
+export function notFoundResponse(message: string, res: Response, status = 404) {
+  res.status(status).json({
     STATUS: 'NOTFOUND',
     MESSAGE: `Resource ${message} could not be found`,
   });
 }
 
-export function failureResponse(message: string, DATA: any, res: Response) {
-  res.status(500).json({
+export function failureResponse(message: string, DATA: any, res: Response, status = 500) {
+  res.status(status).json({
     STATUS: 'FAILURE',
-    MESSAGE: `Something went wrong with \n ${DATA}`,
-    DATA,
+    MESSAGE: `Operate ${message} cloud not be successfully with error \n ${DATA}`,
+    DATA: DATA,
   });
 }
 

@@ -176,6 +176,26 @@ export class UserController {
       });
   }
 
+  public async deleteTeacher(req: Request, res: Response) {
+    const payload = req.params;
+    const target = payload.apply_id;
+    await User.destroy({
+      where: {
+        apply_id: target,
+      },
+    })
+      .then((resp) => {
+        // 1 success delete
+        if (resp) deletedResponse(`${target}`, resp, res);
+        // 0 not found
+        else failureResponse(`${target}`, `not found resource ${target}`, res, 504);
+      })
+      // any error
+      .catch((err) => {
+        failureResponse(`${target}`, err.message || 'delete teacher failed', res);
+      });
+  }
+
   /* ------------------------------- Update User ------------------------------ */
   public async update(req: IRequestWithUser, res: Response, next: NextFunction) {
     const params: IUser = req.body;

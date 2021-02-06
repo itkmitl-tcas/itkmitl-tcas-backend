@@ -4,6 +4,7 @@ export class GetUserDto {
   @IsNotEmpty()
   public apply_id: number;
 }
+
 export class CreateUserDto {
   @IsInt()
   @IsNotEmpty()
