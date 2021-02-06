@@ -163,7 +163,6 @@ export class UserController {
 
   public async createTeacher(req: Request, res: Response) {
     const payload = req.body;
-    payload['permission'] = 2; // force modify permission must be 2;
 
     const salt = await bcrypt.genSalt(10);
     payload.password = await bcrypt.hash(payload.password, salt);
