@@ -50,7 +50,7 @@ export class DocsController {
       const stat = fs.statSync(path);
       res.setHeader('Content-Length', stat.size);
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `inline; filename=${type}`);
+      res.setHeader('Content-Disposition', `inline; filename=${type}.pdf`);
       res.send(file);
     } catch (err) {
       console.log(err.message);
