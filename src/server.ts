@@ -5,15 +5,6 @@ import https from 'https';
 
 const PORT = env.APP_PORT;
 
-// const { key, cert } = await (() => {
-//   const certdir = fs.readFileSync('/etc/letsencrypt/live')[0];
-
-//   return {
-//     key: fs.readFileSync(`/etc/letsencrypt/live/${certdir}/privkey.pem`),
-//     cert: fs.readFileSync(`/etc/letsencrypt/live/${certdir}/fullchain.pem`),
-//   };
-// })();
-
 if (process.env.NODE_ENV == 'production') {
   const server = https.createServer(
     {
