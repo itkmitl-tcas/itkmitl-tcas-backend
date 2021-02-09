@@ -75,6 +75,11 @@ export class UserController {
                   [Op.like]: `%${query.query.search}%`,
                 },
               },
+              {
+                apply_type: {
+                  [Op.like]: `%${query.query.search}%`,
+                },
+              },
             ],
           },
           year,
