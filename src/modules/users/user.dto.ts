@@ -72,6 +72,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsInt()
   public step: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsInt()
+  public audit_step: number;
 }
 
 export class SignInDto {
