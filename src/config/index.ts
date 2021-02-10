@@ -7,6 +7,7 @@ import { DocRoutes } from '../routes/docs_routes';
 import { PortfolioRoutes } from '../routes//portfolio_routes';
 import { CommonRoutes } from '../routes/common_routes';
 import { AssessmentRoutes } from '../routes/assessment_routes';
+import { AuditRoutes } from '../routes/audit_routes';
 import env from './environment';
 
 import * as Sentry from '@sentry/node';
@@ -21,6 +22,7 @@ class App {
   private common_routes: CommonRoutes = new CommonRoutes();
   private healthy_routes: HealthyRoutes = new HealthyRoutes();
   private assessment_routes: AssessmentRoutes = new AssessmentRoutes();
+  private audit_routes: AuditRoutes = new AuditRoutes();
 
   constructor() {
     this.app = express();
@@ -55,6 +57,7 @@ class App {
     this.common_routes.route(this.app);
     this.portfolio_routes.route(this.app);
     this.assessment_routes.route(this.app);
+    this.audit_routes.route(this.app);
   }
 
   private config(): void {
