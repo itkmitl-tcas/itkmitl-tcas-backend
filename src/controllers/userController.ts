@@ -56,6 +56,7 @@ export class UserController {
         })
       : null;
     const step = query.query.step ? { step: +query.query.step } : null;
+    const audit_step = query.query.audit_step ? { audit_step: +query.query.audit_step } : null;
     await User.findAll({
       where: {
         [Op.and]: [
@@ -84,6 +85,7 @@ export class UserController {
           },
           year,
           step,
+          audit_step,
         ],
       },
       attributes: {
