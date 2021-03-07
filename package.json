@@ -7,7 +7,7 @@
     "dev": "tsc && nodemon ./dist/server.js",
     "prod": "tsc && node ./dist/server.js",
     "lint:fix": "eslint ./ --fix",
-    "test": "jest",
+    "test": "jest --coverage --runInBand --detectOpenHandles",
     "test:init": "ts-jest config:init",
     "commit": "cz"
   },

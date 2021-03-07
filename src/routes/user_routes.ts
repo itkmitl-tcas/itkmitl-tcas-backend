@@ -25,7 +25,8 @@ export class UserRoutes {
     // create teacher
     app
       .route('/user/teacher')
-      .post(AuthMiddleware(2), ValidationMiddleware(CreateUserDto, false), this.user_controller.createTeacher);
+      .post(AuthMiddleware(3), ValidationMiddleware(CreateUserDto, false), this.user_controller.createTeacher);
+    app.route('/user/teacher/:apply_id').delete(AuthMiddleware(3), this.user_controller.deleteTeacher);
   }
 }
 

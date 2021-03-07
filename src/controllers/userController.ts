@@ -56,6 +56,7 @@ export class UserController {
         })
       : null;
     const step = query.query.step ? { step: +query.query.step } : null;
+    const audit_step = query.query.audit_step ? { audit_step: +query.query.audit_step } : null;
     await User.findAll({
       where: {
         [Op.and]: [
@@ -75,10 +76,16 @@ export class UserController {
                   [Op.like]: `%${query.query.search}%`,
                 },
               },
+              {
+                apply_type: {
+                  [Op.like]: `%${query.query.search}%`,
+                },
+              },
             ],
           },
           year,
           step,
+          audit_step,
         ],
       },
       attributes: {
@@ -163,7 +170,6 @@ export class UserController {
 
   public async createTeacher(req: Request, res: Response) {
     const payload = req.body;
-    payload['permission'] = 2; // force modify permission must be 2;
 
     const salt = await bcrypt.genSalt(10);
     payload.password = await bcrypt.hash(payload.password, salt);
@@ -173,6 +179,26 @@ export class UserController {
       })
       .catch((err: any) => {
         insufficientParameters(err.errors[0].message, res);
+      });
+  }
+
+  public async deleteTeacher(req: Request, res: Response) {
+    const payload = req.params;
+    const target = payload.apply_id;
+    await User.destroy({
+      where: {
+        apply_id: target,
+      },
+    })
+      .then((resp) => {
+        // 1 success delete
+        if (resp) deletedResponse(`${target}`, resp, res);
+        // 0 not found
+        else failureResponse(`${target}`, `not found resource ${target}`, res, 504);
+      })
+      // any error
+      .catch((err) => {
+        failureResponse(`${target}`, err.message || 'delete teacher failed', res);
       });
   }
 

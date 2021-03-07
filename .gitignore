@@ -4,3 +4,4 @@ remember.txt
 yarn-error.log
 upload/**
 !/**/.gitkeep
+coverage

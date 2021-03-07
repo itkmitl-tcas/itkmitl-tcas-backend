@@ -4,6 +4,7 @@ export class GetUserDto {
   @IsNotEmpty()
   public apply_id: number;
 }
+
 export class CreateUserDto {
   @IsInt()
   @IsNotEmpty()
@@ -71,6 +72,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsInt()
   public step: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsInt()
+  public audit_step: number;
 }
 
 export class SignInDto {

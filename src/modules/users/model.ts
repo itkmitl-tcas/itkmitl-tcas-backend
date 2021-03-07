@@ -2,7 +2,7 @@ import { Model, DataTypes } from 'sequelize';
 import { database } from '../../config/database';
 import { Docs } from '../document/model';
 import { Portfolio, PortfolioType } from '../portfolio/model';
-import { Assessment } from '../assessment';
+import { Audit } from '../audit';
 
 export class User extends Model {
   apply_id: number;
@@ -113,6 +113,11 @@ User.init(
       allowNull: false,
       defaultValue: 1,
     },
+    audit_step: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
   },
   {
     tableName: 'user',
@@ -130,18 +135,24 @@ Docs.belongsTo(User, {
   foreignKey: 'apply_id',
 });
 
+// Portfolio relation
 Portfolio.hasOne(PortfolioType, {
   sourceKey: 'type_id',
   foreignKey: 'type_id',
 });
-
 User.hasMany(Portfolio, {
   sourceKey: 'apply_id',
   foreignKey: 'apply_id',
 });
 
-User.hasMany(Assessment, {
+// Audit relation
+User.hasOne(Audit, {
   sourceKey: 'apply_id',
-  foreignKey: 'assessee_id',
+  foreignKey: 'student_id',
 });
+Audit.belongsTo(User, {
+  targetKey: 'apply_id',
+  foreignKey: 'student_id',
+});
+
 User.sync({ alter: true });
