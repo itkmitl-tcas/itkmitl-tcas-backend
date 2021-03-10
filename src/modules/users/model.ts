@@ -147,12 +147,31 @@ User.hasMany(Portfolio, {
 
 // Audit relation
 User.hasOne(Audit, {
+  as: 'audit_student',
   sourceKey: 'apply_id',
   foreignKey: 'student_id',
+  onDelete: 'RESTRICT',
 });
+User.hasMany(Audit, {
+  as: 'audit_teacher',
+  sourceKey: 'apply_id',
+  foreignKey: 'teacher_id',
+  onDelete: 'RESTRICT',
+});
+
 Audit.belongsTo(User, {
-  targetKey: 'apply_id',
+  as: 'audit_student',
   foreignKey: 'student_id',
 });
+
+Audit.belongsTo(User, {
+  as: 'audit_teacher',
+  foreignKey: 'teacher_id',
+});
+
+// Audit.belongsTo(User, {
+//   targetKey: 'apply_id',
+//   foreignKey: 'teacher_id',
+// });
 
 User.sync({ alter: true });

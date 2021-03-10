@@ -12,6 +12,8 @@ import { Audit, IAudit } from '../modules/audit';
 import { User } from '../modules/users/model';
 import { findQuartile, findPercentile, findPercentileValue } from './helper';
 import Sequelize from 'sequelize';
+import xlsx from 'xlsx';
+import * as fs from 'fs';
 export class AuditController {
   public healthy(req: Request, res: Response) {
     successResponse('Audit api healthy.', null, res);
@@ -35,11 +37,11 @@ export class AuditController {
       where: {
         teacher_id: teacher_id,
       },
-      include: User,
+      include: ['audit_student'],
     })
       .then((nodes: IAudit[]) => {
         if (nodes.length) {
-          nodes = nodes.filter((item: any) => item.user.audit_step < 2);
+          nodes = nodes.filter((item: any) => item.audit_student.audit_step < 2);
           return successResponse(`Mapping`, nodes, res);
         } else {
           return notFoundResponse(teacher_id, res);
@@ -103,7 +105,6 @@ export class AuditController {
   }
 
   public async delete(req: IRequestWithUser, res: Response) {
-    const user: ITokenData = req.user;
     const student_id: any = req.params.student_id;
 
     await Audit.destroy({
@@ -213,5 +214,85 @@ export class AuditController {
     } catch (err) {
       return failureResponse('submit audit', err.message, res);
     }
+  }
+
+  public async exportAudit(req: Request, res: any) {
+    await Audit.findAll({
+      raw: true,
+      where: {
+        score: {
+          [Sequelize.Op.gt]: 0,
+        },
+      },
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      include: [
+        {
+          model: User,
+          as: 'audit_student',
+          attributes: {
+            exclude: ['password', 'apply_id', 'pay', 'permission', 'audit_step', 'step', 'createdAt', 'updatedAt'],
+          },
+        },
+      ],
+    })
+      .then((nodes) => {
+        if (nodes.length) {
+          res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          res.setHeader('Content-Disposition', 'attachment; filename=export.xlsx');
+          const filename = 'export.xlsx';
+          const heading = [
+            [
+              'id',
+              'รหัสนักศึกษา (student_id)',
+              'รหัสผู้ตรวจ (teacher_id)',
+              'คะแนน (score)',
+              'ประเภทการสมัคร (apply_type)',
+              'คำนำหน้า (prename)',
+              'ชื่อต้น (name)',
+              'นามสกุล (surname)',
+              'อีเมลล์ (email)',
+              'เบอร์โทร (tel)',
+              'โรงเรียน (school)',
+              'gpax รวม (gpax_all)',
+              'gpax คณิตศาสตร์ (gpax_math)',
+              'gpax ภาษาอังกฤษ (gpax_eng)',
+              'gpax คอมพิวเตอร์ (gpax_com)',
+              'หน่วยกิตรวม (credit_total)',
+              'แผนการเรียน (study_field)',
+            ],
+          ];
+          const wb = xlsx.utils.book_new();
+          const ws = xlsx.utils.json_to_sheet(nodes, { skipHeader: true });
+          ws['!cols'] = [
+            { wch: 5 },
+            { wch: 10 },
+            { wch: 10 },
+            { wch: 5 },
+            { wch: 50 },
+            { wch: 10 },
+            { wch: 10 },
+            { wch: 15 },
+            { wch: 25 },
+            { wch: 15 },
+            { wch: 30 },
+            { wch: 5 },
+            { wch: 5 },
+            { wch: 5 },
+            { wch: 5 },
+            { wch: 10 },
+            { wch: 20 },
+          ];
+          xlsx.utils.sheet_add_aoa(ws, heading);
+          xlsx.utils.book_append_sheet(wb, ws);
+          xlsx.writeFile(wb, filename, { bookType: 'xlsx', type: 'binary' });
+          const stream = fs.createReadStream(filename);
+          stream.pipe(res);
+
+          // successResponse('Export audit', nodes, res);
+        } else notFoundResponse('audit', res);
+      })
+      .catch((err) => {
+        failureResponse('export audit', err.message, res);
+      });
   }
 }
