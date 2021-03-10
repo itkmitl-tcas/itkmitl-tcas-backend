@@ -11,6 +11,8 @@ export class AuditRoutes {
     // ! healthly
     app.route('/audit').get(this.audit_controller.healthy);
 
+    // ! get export
+    app.route('/audit/export').get(AuthMiddleware(2), this.audit_controller.exportAudit);
     // ! get mapping
     app
       .route('/audit/:teacher_id')

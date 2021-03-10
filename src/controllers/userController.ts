@@ -127,7 +127,6 @@ export class UserController {
         else next(notFoundResponse(apply_id, res));
       })
       .catch((err) => {
-        console.log(err);
         failureResponse('get user', err, res);
       });
   }
